@@ -12,8 +12,252 @@
 
 <body>
 
+  <div class="container">
+    <header>
+      <div class="brand">
+        <div class="logo">BC</div>
+        <div>
+          <h1>Book Coin</h1>
+          <div class="muted" style="font-size:12px">Kutubxona & katalog</div>
+        </div>
+      </div>
+      <nav class="nav" aria-label="Main navigation">
+        <a href="#">Katalog</a>
+        <a href="#">Jurnallar</a>
+        <a href="#">Yordam</a>
+        <a class="cta" href="{% url 'blog:login' %}">Ro'yxatdan o'tish</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-left">
+        
+        <div class="search">
+          <input id="search" placeholder="Kitob, muallif yoki ISBN bo'yicha qidirish..." aria-label="qidiruv" />
+          <button id="btn">Qidirish</button>
+        </div>
+        <div style="margin-top:18px;display:flex;gap:10px">
+
+        </div>
+      </div>
 
 
+      <!-- <aside class="hero-right">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          
+        </div>
+      </aside> -->
+    </section>
+     <div class="book1">
+        <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
+        <img src="./Img/60e588568e53cccb7d4a87c14537998d.jpg" alt="">
+        <img src="./Img/2.jpg" alt="">
+    </div>
+
+    <main>
+      <div class="filters">
+        <div class="pill">Hammasi</div>
+        <div class="pill">Falsafa</div>
+        <div class="pill">Ilm-fan</div>
+        <div class="pill">Badiiy</div>
+      </div>
+
+      <section class="grid" id="list" aria-label="book list">
+        
+        
+
+        <!-- Book card 3 -->
+        <article class="card">
+  <div class="thumb">
+    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
+    <small class="muted"></small>
+  </div>
+  <div class="meta">
+    <h3>Hayot falsafasi</h3>
+    <p class="muted">S. Aliyev • 2016</p>
+    <div class="tags"><span class="tag">Falsafa</span></div>
+  </div>
+</article>
+
+<article class="card">
+  <div class="thumb">
+    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
+    <small class="muted"></small>
+  </div>
+  <div class="meta">
+    <h3>Hayot falsafasi</h3>
+    <p class="muted">S. Aliyev • 2016</p>
+    <div class="tags"><span class="tag">Falsafa</span></div>
+  </div>
+</article>
+
+<article class="card">
+  <div class="thumb">
+    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
+    <small class="muted"></small>
+  </div>
+  <div class="meta">
+    <h3>Hayot falsafasi</h3>
+    <p class="muted">S. Aliyev • 2016</p>
+    <div class="tags"><span class="tag">Falsafa</span></div>
+  </div>
+</article>
+<article class="card">
+  <div class="thumb">
+    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
+    <small class="muted"></small>
+  </div>
+  <div class="meta">
+    <h3>Hayot falsafasi</h3>
+    <p class="muted">S. Aliyev • 2016</p>
+    <div class="tags"><span class="tag">Falsafa</span></div>
+  </div>
+</article>
+
+<article class="card">
+  <div class="thumb">
+    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
+    <small class="muted"></small>
+  </div>
+  <div class="meta">
+    <h3>Hayot falsafasi</h3>
+    <p class="muted">S. Aliyev • 2016</p>
+    <div class="tags"><span class="tag">Falsafa</span></div>
+  </div>
+</article>
+
+<article class="card">
+  <div class="thumb">
+    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
+    <small class="muted"></small>
+  </div>
+  <div class="meta">
+    <h3>Hayot falsafasi</h3>
+    <p class="muted">S. Aliyev • 2016</p>
+    <div class="tags"><span class="tag">Falsafa</span></div>
+  </div>
+</article>
+<article class="card">
+  <div class="thumb">
+    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
+    <small class="muted"></small>
+  </div>
+  <div class="meta">
+    <h3>Hayot falsafasi</h3>
+    <p class="muted">S. Aliyev • 2016</p>
+    <div class="tags"><span class="tag">Falsafa</span></div>
+  </div>
+</article>
+
+<article class="card">
+  <div class="thumb">
+    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
+    <small class="muted"></small>
+  </div>
+  <div class="meta">
+    <h3>Hayot falsafasi</h3>
+    <p class="muted">S. Aliyev • 2016</p>
+    <div class="tags"><span class="tag">Falsafa</span></div>
+  </div>
+</article>
+
+<article class="card">
+  <div class="thumb">
+    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
+    <small class="muted"></small>
+  </div>
+  <div class="meta">
+    <h3>Hayot falsafasi</h3>
+    <p class="muted">S. Aliyev • 2016</p>
+    <div class="tags"><span class="tag">Falsafa</span></div>
+  </div>
+</article>
+<article class="card">
+  <div class="thumb">
+    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
+    <small class="muted"></small>
+  </div>
+  <div class="meta">
+    <h3>Hayot falsafasi</h3>
+    <p class="muted">S. Aliyev • 2016</p>
+    <div class="tags"><span class="tag">Falsafa</span></div>
+  </div>
+</article>
+
+<article class="card">
+  <div class="thumb">
+    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
+    <small class="muted"></small>
+  </div>
+  <div class="meta">
+    <h3>Hayot falsafasi</h3>
+    <p class="muted">S. Aliyev • 2016</p>
+    <div class="tags"><span class="tag">Falsafa</span></div>
+  </div>
+</article>
+
+<article class="card">
+  <div class="thumb">
+    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
+    <small class="muted"></small>
+  </div>
+  <div class="meta">
+    <h3>Hayot falsafasi</h3>
+    <p class="muted">S. Aliyev • 2016</p>
+    <div class="tags"><span class="tag">Falsafa</span></div>
+  </div>
+</article>
+<article class="card">
+  <div class="thumb">
+    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
+    <small class="muted"></small>
+  </div>
+  <div class="meta">
+    <h3>Hayot falsafasi</h3>
+    <p class="muted">S. Aliyev • 2016</p>
+    <div class="tags"><span class="tag">Falsafa</span></div>
+  </div>
+</article>
+
+<article class="card">
+  <div class="thumb">
+    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
+    <small class="muted"></small>
+  </div>
+  <div class="meta">
+    <h3>Hayot falsafasi</h3>
+    <p class="muted">S. Aliyev • 2016</p>
+    <div class="tags"><span class="tag">Falsafa</span></div>
+  </div>
+</article>
+
+<article class="card">
+  <div class="thumb">
+    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
+    <small class="muted"></small>
+  </div>
+  <div class="meta">
+    <h3>Hayot falsafasi</h3>
+    <p class="muted">S. Aliyev • 2016</p>
+    <div class="tags"><span class="tag">Falsafa</span></div>
+  </div>
+</article>
+
+
+
+        <!-- More sample cards (repeat to showcase layout) -->
+        
+      </section>
+
+      <footer>
+        <div>© 2025 PDP Universiteti • Inspiratsiya: openlibrary.org & unilibrary.uz</div>
+      </footer>
+    </main>
+  </div>
+
+
+
+  <script src="{%static 'js/main.js'%}?v=3"></script>
 </body>
 
 </html>

@@ -3,12 +3,12 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import make_password, check_password
 from django.db import IntegrityError
-from .models import Users
+from .models import User
 import json
 
 
-def home_page(request):
-    return render(request, "index.html")
+def main(request):
+    return render(request, "main.html")
 
 def forgot(request):
     return render(request, "forgot.html")
@@ -18,12 +18,12 @@ def login(request):
         username = request.POST.get("username")
         password = request.POST.get("password")
 
-        account = Users.objects.filter(username=username).first()
+        account = User.objects.filter(username=username).first()
 
         if account and check_password(password, account.password):
             return render(request, "main.html", {"user": account})
         else:
-            return render(request, "index.html", {"error": "Username yoki parol noto‘g‘ri!"})
+            return render(request, "index.html", {"error": "Username yoki parol noto'g'ri!"})
 
     return render(request, "index.html")
 
@@ -35,7 +35,7 @@ def api_login(request):
             username = data.get("username")
             password = data.get("password")
 
-            account = Users.objects.filter(username=username).first()
+            account = User.objects.filter(username=username).first()
 
             if account and check_password(password, account.password):
                 return JsonResponse({"success": True, "username": account.username})
@@ -61,7 +61,7 @@ def signup(request):
         password = request.POST.get("password")
 
         try:
-            Users.objects.create(
+            User.objects.create(
                 username=username,
                 surname=surname,
                 email=email,
@@ -88,13 +88,13 @@ def api_signup(request):
             if not username or not surname or not email or not password:
                 return JsonResponse({"success": False, "error": "Majburiy maydonlar to'ldirilmagan!"}, status=400)
 
-            if Users.objects.filter(username=username, surname=surname).exists():
+            if User.objects.filter(username=username, surname=surname).exists():
                 return JsonResponse({"success": False, "error": "Bu username + surname kombinatsiyasi allaqachon mavjud!"}, status=400)
 
-            if Users.objects.filter(email=email).exists():
+            if User.objects.filter(email=email).exists():
                 return JsonResponse({"success": False, "error": "Bu email allaqachon mavjud!"}, status=400)
 
-            account = Users.objects.create(
+            account = User.objects.create(
                 username=username,
                 surname=surname,
                 email=email,
@@ -112,5 +112,3 @@ def api_signup(request):
 
 
 
-def main(request):
-    return render(request, "main.html")

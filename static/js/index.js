@@ -5,10 +5,10 @@ window.addEventListener("load", function () {
     toggle.addEventListener("click", () => {
         if (input.type === "password") {
             input.type = "text";
-            toggle.src = "/static/images/view.png";
+            toggle.src = "/static/images/invisible.png";
         } else {
             input.type = "password";
-            toggle.src = "/static/images/invisible.png";
+            toggle.src = "/static/images/view.png";
         }
         toggle.style.width = "40px";
         toggle.style.height = "40px";
@@ -44,3 +44,4 @@ window.addEventListener("load", function () {
         }
     });
 });
+

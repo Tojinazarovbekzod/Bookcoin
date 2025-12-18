@@ -1,5 +1,4 @@
 from django.db import models
-from django.db.models import Q
 
 class Tag(models.Model):
     name = models.CharField(verbose_name="Tag name",max_length=250)
@@ -40,7 +39,7 @@ class Rating(models.Model):
     
     
 
-class Users(models.Model):
+class User(models.Model):
     username = models.CharField(max_length=150) 
     surname = models.CharField(max_length=150)  
     email = models.EmailField(unique=True, blank=True, null=True)
