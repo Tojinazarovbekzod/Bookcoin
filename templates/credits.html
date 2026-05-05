@@ -1,0 +1,107 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Credit Wallet</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-slate-950 text-white flex items-center justify-center min-h-screen">
+
+  <div class="w-full max-w-md bg-slate-900 rounded-2xl shadow-xl p-6">
+
+    <!-- HEADER -->
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-xl font-bold"><a href="#"></a></h1>
+      <span class="text-green-400 text-sm">Online</span>
+    </div>
+
+    <!-- BALANCE -->
+    <div class="bg-slate-800 p-4 rounded-xl mb-5">
+      <p class="text-slate-400 text-sm">Current Balance</p>
+      <h2 id="balance" class="text-3xl font-bold text-green-400">0</h2>
+    </div>
+
+    <!-- INPUT -->
+    <input
+      id="code"
+      type="text"
+      placeholder="Enter redeem code"
+      class="w-full p-3 rounded-lg bg-slate-800 outline-none focus:ring-2 focus:ring-green-500"
+    />
+
+    <!-- BUTTON -->
+    <button
+      onclick="redeem()"
+      class="w-full mt-3 bg-green-500 hover:bg-green-600 py-2 rounded-lg font-semibold transition"
+    >
+      Redeem Credit
+    </button>
+
+    <!-- MESSAGE -->
+    <p id="msg" class="text-center mt-3 text-sm"></p>
+
+    <!-- HISTORY -->
+    <div class="mt-6">
+      <h3 class="text-sm text-slate-400 mb-2">Redeem History</h3>
+      <ul id="history" class="space-y-2 text-sm"></ul>
+    </div>
+
+  </div>
+
+<script>
+  let balance = 0;
+
+  const codes = {
+    "FREE100": 100,
+    "BONUS200": 200,
+    "WELCOME50": 50,
+    "VIP500": 500,
+  };
+
+  function redeem() {
+    const code = document.getElementById("code").value.trim();
+    const msg = document.getElementById("msg");
+    const history = document.getElementById("history");
+
+    msg.innerText = "";
+
+    if (!code) {
+      msg.innerText = "Enter a code!";
+      msg.className = "text-red-400 text-center mt-3 text-sm";
+      return;
+    }
+
+    if (codes[code]) {
+      const amount = codes[code];
+
+      // update balance
+      balance += amount;
+      document.getElementById("balance").innerText = balance;
+
+      // success message
+      msg.innerText = `+${amount} credits added 🎉`;
+      msg.className = "text-green-400 text-center mt-3 text-sm";
+
+      // history item
+      const li = document.createElement("li");
+      li.className = "bg-slate-800 p-2 rounded-lg text-green-300";
+      li.innerText = `${code} → +${amount}`;
+      history.prepend(li);
+
+      // remove used code (one-time use)
+      delete codes[code];
+
+    } else {
+      msg.innerText = "Invalid or used code ❌";
+      msg.className = "text-red-400 text-center mt-3 text-sm";
+    }
+
+    document.getElementById("code").value = "";
+  }
+</script>
+
+</body>
+</html>

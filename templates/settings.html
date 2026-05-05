@@ -1,0 +1,95 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BookCoin | Settings</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="{% static 'images/bookLogotip.jpg'%}">
+</head>
+
+<body class="bg-gray-950 text-gray-100 min-h-screen flex justify-center">
+
+  <div class="w-full max-w-md mt-10">
+
+    <!-- Header -->
+    <div class="flex items-center justify-between px-4 mb-6">
+      <h1 class="text-2xl font-semibold">Settings</h1>
+      <a href="{%url 'blog:studentDashboard'%}" class="text-gray-400 hover:text-white">✖</a>
+    </div>
+
+    <!-- Profile -->
+    <div class="bg-gray-900 rounded-2xl p-4 mx-4 mb-4 flex items-center gap-4 shadow">
+      <div class="w-12 h-12 rounded-full bg-indigo-600 flex items-center justify-center text-lg font-bold">
+        B
+      </div>
+      <div>
+        <p class="font-medium">Bekzod</p>
+        <p class="text-sm text-gray-400">bekzod@mail.com</p>
+      </div>
+    </div>
+
+    <!-- General -->
+    <div class="mx-4 mb-4">
+      <p class="text-xs text-gray-500 mb-2">GENERAL</p>
+
+      <div class="bg-gray-900 rounded-2xl divide-y divide-gray-800">
+
+        <div class="flex justify-between items-center p-4 hover:bg-gray-800 transition">
+          <span>🌙 Dark Mode</span>
+          <div class="w-10 h-5 bg-indigo-600 rounded-full relative">
+            <div class="w-4 h-4 bg-white rounded-full absolute top-0.5 right-0.5"></div>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center p-4 hover:bg-gray-800 transition">
+          <span>🔔 Notifications</span>
+          <div class="w-10 h-5 bg-gray-700 rounded-full relative">
+            <div class="w-4 h-4 bg-white rounded-full absolute top-0.5 left-0.5"></div>
+          </div>
+        </div>
+
+        <div class="flex justify-between items-center p-4 hover:bg-gray-800 transition">
+          <span>🌐 Language</span>
+          <span class="text-gray-400 text-sm">English</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Security -->
+    <div class="mx-4 mb-4">
+      <p class="text-xs text-gray-500 mb-2">SECURITY</p>
+
+      <div class="bg-gray-900 rounded-2xl divide-y divide-gray-800">
+
+        <div class="flex justify-between items-center p-4 hover:bg-gray-800 transition">
+          <span>🔑 Change Password</span>
+          <span class="text-gray-500">›</span>
+        </div>
+
+        <div class="flex justify-between items-center p-4 hover:bg-gray-800 transition">
+          <span>🛡 Two-Factor Auth</span>
+          <span class="text-gray-500">›</span>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Danger Zone -->
+    <div class="mx-4 mb-6">
+      <p class="text-xs text-gray-500 mb-2">DANGER ZONE</p>
+
+      <div class="bg-gray-900 rounded-2xl p-4">
+
+        <button class="w-full bg-red-600 hover:bg-red-700 p-3 rounded-xl transition">
+          Delete Account
+        </button>
+
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

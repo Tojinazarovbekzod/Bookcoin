@@ -1,0 +1,313 @@
+{% load static%}
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>BookCoin - Book Detail</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link rel="icon" href="{% static 'images/bookLogotip.jpg'%}">
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;family=Inter:wght@300..700&amp;display=swap" rel="stylesheet"/>
+<!-- Icons -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-tertiary-fixed": "#2f1500",
+                        "surface": "#f8f9fa",
+                        "surface-tint": "#7b41b3",
+                        "outline-variant": "#cec3d3",
+                        "surface-container": "#edeeef",
+                        "on-surface-variant": "#4c4451",
+                        "on-tertiary-container": "#c98c5c",
+                        "outline": "#7d7483",
+                        "on-secondary": "#ffffff",
+                        "on-surface": "#191c1d",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-fixed": "#221b00",
+                        "tertiary-fixed-dim": "#fbb884",
+                        "on-primary": "#ffffff",
+                        "secondary-container": "#fcd400",
+                        "error-container": "#ffdad6",
+                        "surface-container-high": "#e7e8e9",
+                        "surface-bright": "#f8f9fa",
+                        "surface-container-low": "#f3f4f5",
+                        "background": "#f8f9fa",
+                        "on-primary-fixed-variant": "#622599",
+                        "surface-container-highest": "#e1e3e4",
+                        "on-primary-fixed": "#2c0050",
+                        "on-secondary-fixed-variant": "#544600",
+                        "secondary": "#705d00",
+                        "on-background": "#191c1d",
+                        "tertiary": "#301600",
+                        "secondary-fixed": "#ffe16d",
+                        "inverse-on-surface": "#f0f1f2",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#f0dbff",
+                        "inverse-primary": "#ddb7ff",
+                        "primary-container": "#4b0082",
+                        "secondary-fixed-dim": "#e9c400",
+                        "surface-variant": "#e1e3e4",
+                        "primary": "#2e0052",
+                        "tertiary-container": "#4f2700",
+                        "tertiary-fixed": "#ffdcc3",
+                        "on-tertiary-fixed-variant": "#693c12",
+                        "on-tertiary": "#ffffff",
+                        "error": "#ba1a1a",
+                        "primary-fixed-dim": "#ddb7ff",
+                        "surface-dim": "#d9dadb",
+                        "inverse-surface": "#2e3132",
+                        "on-secondary-container": "#6e5c00",
+                        "on-primary-container": "#ba7ef4",
+                        "on-error": "#ffffff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "1rem",
+                        "lg": "2rem",
+                        "xl": "3rem",
+                        "full": "9999px"
+                    },
+                    "fontFamily": {
+                        "headline": ["Space Grotesk"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .book-shadow {
+            box-shadow: 25px 25px 50px rgba(46, 0, 82, 0.15), -5px 0 15px rgba(0,0,0,0.05);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-[0px_20px_40px_rgba(46,0,82,0.06)]">
+<div class="max-w-screen-2xl mx-auto flex items-center justify-between px-8 py-4">
+<div class="flex items-center gap-12">
+<span class="text-2xl font-bold tracking-tighter text-[#4B0082] dark:text-white font-headline">BookCoin</span>
+<div class="hidden md:flex items-center gap-8 font-headline tracking-tight">
+<a class="text-[#4B0082] dark:text-white border-b-2 border-[#fcd400] pb-1" href="{%url 'blog:catalog'%}">Catalog</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-[#4B0082] transition-colors" href="{%url 'blog:studentDashboard'%}">Dashboard</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-[#4B0082] transition-colors" href="{%url 'blog:bookDetail'%}">Library</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="hidden sm:flex items-center gap-2 px-4 py-2 bg-secondary-fixed text-on-secondary-fixed rounded-full font-headline font-bold">
+<span class="material-symbols-outlined text-lg">account_balance_wallet</span>
+<span>1,240 BKC</span>
+</div>
+<button class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-slate-50 transition-colors rounded-full active:scale-95 duration-200">notifications</button>
+<button class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-slate-50 transition-colors rounded-full active:scale-95 duration-200">history</button>
+<div class="h-10 w-10 rounded-full bg-surface-container-highest overflow-hidden border-2 border-surface">
+<img class="w-full h-full object-cover" data-alt="portrait of a focused university student with glasses in a scholarly environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8nBIA_PvNGi5qkwdUPI65pOeBBrmVrU4--z5npYHWdvNMr-VqqRWm5mxkxT9RYiI-k-j9vw3fLZt9N1WfZ0jOByovQBV2bXge36MeYmorhgL8YOzCEZjN3W563XeItI0jCLasgoeMfmfuwi2qXSLVdlrlJTTnCurbD8et5MklBfjfDtW5DXlXNyFTUae48FP_JHAnuq0n0LM6lIBkmcvsIbChyly1zV7_-kAbeA81Tgf5CUzholBRhH5EmQMnJXuKSRNZhr7zsFU"/>
+</div>
+</div>
+</div>
+<div class="bg-slate-100 dark:bg-slate-800 h-[1px] w-full"></div>
+</nav>
+<main class="pt-32 pb-24 px-8 max-w-7xl mx-auto">
+<!-- Breadcrumb -->
+<nav class="flex items-center gap-2 text-sm text-on-surface-variant mb-12 font-headline">
+<a class="hover:text-primary" href="#">Catalog</a>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<a class="hover:text-primary" href="#">Academic Press</a>
+<span class="material-symbols-outlined text-sm">chevron_right</span>
+<span class="text-primary font-bold">Principles of Quantum Macroeconomics</span>
+</nav>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
+<!-- Left Column: Book Mockup -->
+<div class="lg:col-span-5 sticky top-32">
+<div class="relative group">
+<div class="absolute -inset-4 bg-primary-fixed/30 rounded-xl blur-3xl opacity-50 group-hover:opacity-70 transition-opacity"></div>
+<div class="relative aspect-[3/4] rounded-lg overflow-hidden book-shadow transform -rotate-2 hover:rotate-0 transition-transform duration-500">
+<img class="w-full h-full object-cover" data-alt="premium hardback book cover with elegant minimalist typography and abstract geometric gold foil patterns" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8eWNDoXXCC-noY3i4psS7Pn6r3ytPpa0eKPHYSH81eI96fLdCMjJN3DZK5kZPxoYMACGzOBd92bsZo8U2S9fZdloxLbs_P2t7kDUMc76nrJzB9rti7FdJXfBeAj_ceaXVD38fTrVBjQ8MihhCPmrRdeEhlQFQF1o_oOe0nAjH5tKQxxggA5TgaYG_PQ2jUbFK1ULNw3BjY1wls9a6PXEMudL_ukNrecwO6_PECtgu5McXZfTHFX_yuwVgRMW3T43UGYA12Fc2iEE"/>
+</div>
+<!-- Overlay Badge -->
+<div class="absolute -bottom-6 -right-6 bg-white p-4 rounded-xl shadow-xl flex items-center gap-3">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">verified</span>
+</div>
+<div>
+<p class="text-[10px] uppercase tracking-widest text-on-surface-variant font-bold">Status</p>
+<p class="text-sm font-headline font-bold text-primary">High Availability</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Column: Details & Rental -->
+<div class="lg:col-span-7 flex flex-col gap-10">
+<header>
+<div class="flex items-center gap-3 mb-4">
+<span class="px-3 py-1 bg-primary-container/10 text-primary-container text-xs font-bold rounded-full uppercase tracking-widest">Economics</span>
+<span class="px-3 py-1 bg-surface-container-high text-on-surface-variant text-xs font-bold rounded-full uppercase tracking-widest">Post-Graduate</span>
+</div>
+<h1 class="text-5xl md:text-6xl font-headline font-extrabold tracking-tighter text-primary leading-none mb-4">Principles of Quantum Macroeconomics</h1>
+<p class="text-xl text-on-surface-variant font-headline italic">Dr. Alistair Thorne, FRSA</p>
+</header>
+<div class="prose prose-slate max-w-none">
+<h3 class="text-sm font-bold uppercase tracking-widest text-on-surface-variant mb-3 font-headline">Abstract</h3>
+<p class="text-lg leading-relaxed text-on-surface">
+                        A seminal work bridging the gap between stochastic market behaviors and non-linear economic systems. Dr. Thorne introduces the 'BookCoin Ledger' as a theoretical model for decentralized academic resource distribution, challenging traditional fiat-based textbook acquisition frameworks.
+                    </p>
+</div>
+<!-- Rental System Card -->
+<div class="bg-surface-container-lowest p-8 rounded-lg shadow-[0px_20px_40px_rgba(46,0,82,0.06)] border border-outline-variant/10">
+<div class="flex items-center justify-between mb-8">
+<div>
+<h3 class="text-xl font-headline font-bold text-primary">Rental System</h3>
+<p class="text-sm text-on-surface-variant">Instant access to digital ledger copy</p>
+</div>
+<span class="material-symbols-outlined text-primary text-3xl">digital_wellbeing</span>
+</div>
+<div class="grid grid-cols-3 gap-4 mb-8">
+<!-- Option 1 -->
+<button class="flex flex-col items-center gap-3 p-4 rounded-xl border-2 border-primary-container bg-primary-container/5 transition-all">
+<span class="text-xs font-bold uppercase text-primary">3 Days</span>
+<div class="flex items-center gap-1">
+<span class="font-headline font-extrabold text-2xl text-primary">12</span>
+<span class="text-[10px] font-bold text-primary-container">BKC</span>
+</div>
+</button>
+<!-- Option 2 -->
+<button class="flex flex-col items-center gap-3 p-4 rounded-xl border-2 border-transparent bg-surface-container-low hover:border-outline-variant transition-all">
+<span class="text-xs font-bold uppercase text-on-surface-variant">7 Days</span>
+<div class="flex items-center gap-1">
+<span class="font-headline font-extrabold text-2xl text-on-surface">25</span>
+<span class="text-[10px] font-bold text-on-surface-variant">BKC</span>
+</div>
+</button>
+<!-- Option 3 -->
+<button class="flex flex-col items-center gap-3 p-4 rounded-xl border-2 border-transparent bg-surface-container-low hover:border-outline-variant transition-all">
+<span class="text-xs font-bold uppercase text-on-surface-variant">14 Days</span>
+<div class="flex items-center gap-1">
+<span class="font-headline font-extrabold text-2xl text-on-surface">45</span>
+<span class="text-[10px] font-bold text-on-surface-variant">BKC</span>
+</div>
+</button>
+</div>
+<div class="flex flex-col sm:flex-row gap-4">
+<button class="flex-1 bg-gradient-to-br from-primary to-primary-container text-white py-4 rounded-full font-headline font-bold text-lg shadow-lg hover:shadow-xl transition-all active:scale-95">
+                            Redeem Academic Credit
+                        </button>
+<button class="px-8 py-4 bg-secondary-container text-on-secondary-container rounded-full font-headline font-bold flex items-center justify-center gap-2 hover:bg-secondary-fixed transition-colors active:scale-95">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">stars</span>
+                            Buy Credits
+                        </button>
+</div>
+<p class="text-center text-xs text-on-surface-variant mt-6 flex items-center justify-center gap-2">
+<span class="material-symbols-outlined text-sm">info</span>
+                        Books are automatically returned to the ledger after duration expires.
+                    </p>
+</div>
+<div class="flex items-center gap-8 pt-6 border-t border-surface-container-high">
+<div class="flex -space-x-4">
+<img class="w-10 h-10 rounded-full border-2 border-white object-cover" data-alt="professional academic researcher portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDn1Leb92o5pS9aZyYqn5RXXkOEU1FYFE1Cll8-kumoFe_tSv6y9NpuCTrdwLCgTXr0ueJNx1XID_GnazdDkwAu2HC6lYMyRYd42jq5v6koJjhTHfLymUcWhW49hFLQpnM4I4IrH_jUY6cLATBFn_vIpA8vtcm-om7B4VFHDexB97A753kRwwv9i6WMr1gkfa21MUgb4HJL4Uc6vBVzWs8TBFjQXlzhbOioRQBsaioI74ts5ijNeKKVXYmCF9v6x2SmiTh_o43GaWA"/>
+<img class="w-10 h-10 rounded-full border-2 border-white object-cover" data-alt="graduate student smiling in campus setting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNsjeJotuW6aYxmhgLwqMBBhZu4JKXhOcojzdxyOF2bYgLjZlxCPuwEeVWVt-YPKoobGrxs8jyWGwILfatFVheV7reMJpNI2sIspUzRwHpzGgcSalYWxEerABFk7cKNPtpsRLGvgbPyroT5nwBIayIq7twfVogH-_-6kqJxeblPh1WWdpWXIDit1X3qKuLbCHJrZ51h3YFMbhRU0BwxnoVXLzaAhuE5fJoucdPQNvKyGs9EGJcl8hCkiA4NZOmZeXzcdDDLUJjZaU"/>
+<img class="w-10 h-10 rounded-full border-2 border-white object-cover" data-alt="female scholar in modern office space" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZ-D7NOxkqUgH40dwuNE17XQIvySkn7qkBBdfRjn88j2CcfyyDbqS41EB94rqBRz7IhMSZI1J6CYH8JbF55fBppBwDQIvP6kZuPki3hxgzSFQnYzhSIcM2X-jDcQck7zFBFEl5Ex41vvQcD035cViRTXxjPj3ryrzEnV068vSRziUpsYAL3-fC-hIX_Qj1Q5bb63CgLT4SgNpui-u7QOm5NsyaZSVspjeHOcTb8s7YrRmH08gYkfbR9-0EZ4YN44V7RtwMiUB2rS0"/>
+<div class="w-10 h-10 rounded-full border-2 border-white bg-primary-fixed flex items-center justify-center text-[10px] font-bold text-primary">+240</div>
+</div>
+<p class="text-sm text-on-surface-variant"><span class="font-bold text-primary">243 students</span> rented this book this semester.</p>
+</div>
+</div>
+</div>
+<!-- Recommendations Section -->
+<section class="mt-32">
+<div class="flex items-end justify-between mb-12">
+<div>
+<h2 class="text-3xl font-headline font-black text-primary tracking-tighter">Popular among students</h2>
+<p class="text-on-surface-variant">Recommended based on your curriculum track</p>
+</div>
+<button class="text-primary font-bold flex items-center gap-2 hover:underline">
+                    View Entire Catalog
+                    <span class="material-symbols-outlined">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
+<!-- Book Card 1 -->
+<div class="group cursor-pointer">
+<div class="aspect-[2/3] rounded-lg overflow-hidden bg-surface-container-low mb-4 shadow-sm group-hover:shadow-xl transition-all group-hover:-translate-y-2">
+<img class="w-full h-full object-cover" data-alt="minimalist legal textbook cover with bold typography and dark blue background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBXOwLNjm4Ir0OeehXJPqz1XFRhkj6HGrzg9kdf1zlDc6lm9k4ePvCiuXOkfGsOdx7sfl1Zdrp5s-cciFYEgQ1mQtcR6FF6dkEL6NqzKTve1p_Rpo6LKP4RRvpQKHZmj1lGnJ8tKLkZi4OLya11aj4wyOihA_EBfPk67OrC2agowW995RC7S0y-So9uoWVvxMQZcIUN0sbdYgMkuanEm1EeoRd-GTzk1FN1YoAfxGPXY1lYIZF5wiYKy2uGXoDDN_FE9aLKV6bjpFU"/>
+</div>
+<h4 class="font-headline font-bold text-on-surface group-hover:text-primary transition-colors leading-tight">Advanced Jurisprudence</h4>
+<p class="text-xs text-on-surface-variant mt-1">L. K. Sterling</p>
+<div class="mt-3 flex items-center gap-1 px-2 py-1 bg-secondary-fixed w-fit rounded-full">
+<span class="text-[10px] font-black text-on-secondary-fixed">18 BKC</span>
+</div>
+</div>
+<!-- Book Card 2 -->
+<div class="group cursor-pointer">
+<div class="aspect-[2/3] rounded-lg overflow-hidden bg-surface-container-low mb-4 shadow-sm group-hover:shadow-xl transition-all group-hover:-translate-y-2">
+<img class="w-full h-full object-cover" data-alt="scientific journal cover featuring biological cell diagrams and futuristic teal accents" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBoIOFyoaf5zUYlEFY6hrzC51PmZ8f7PCGP13BsdLmuN7NnPKy5tOlHcovBdjTugo1rdcp3RN8EH2pJndaztk-VaMaBzuoxR1eOJW3zwtiS_ap1rCJKjhwepc-P2CNsS8ggEQLBxqR8OBzNS5t5DyiQV7E15QmAnp1O-R3QqWwMTNYO6VOauNX6ROIpsb59Y8l4sQBbzjKQX1PIetVcotYJrWDeyzlPUqgKb7l_TTvcaHg2liIXqHo8SfSUmU1S15SiSgo9qV3F7jM"/>
+</div>
+<h4 class="font-headline font-bold text-on-surface group-hover:text-primary transition-colors leading-tight">Molecular Dynamics</h4>
+<p class="text-xs text-on-surface-variant mt-1">Dr. S. Chen</p>
+<div class="mt-3 flex items-center gap-1 px-2 py-1 bg-secondary-fixed w-fit rounded-full">
+<span class="text-[10px] font-black text-on-secondary-fixed">32 BKC</span>
+</div>
+</div>
+<!-- Book Card 3 -->
+<div class="group cursor-pointer">
+<div class="aspect-[2/3] rounded-lg overflow-hidden bg-surface-container-low mb-4 shadow-sm group-hover:shadow-xl transition-all group-hover:-translate-y-2">
+<img class="w-full h-full object-cover" data-alt="historical architecture book with elegant black and white photography of classical columns" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3A4lzog5QJpudeKhVG-vyB9-JwzdCnZ3GOE2hK7Ez1DGxIq_ePOQdkZ68YM8Zp57klVgCAGM6LqUXZrYkpvsO9aGPu8VXeGThz30Qe8JhfBkRpwsToxWPA_7pz2HLijF3aDeUu5ZFRU-lF-jXb11j_wzE7_5rhkeV0TxiiEzJq2V-pyC1qXs8uWfMkfDtPtzr7xQHNNApZKAy_XxLYHYpD_sMC4hr2HpNZaYKmnIsokvcBUEupqUUPyuLKNudfNTCOxG1NYaS4wE"/>
+</div>
+<h4 class="font-headline font-bold text-on-surface group-hover:text-primary transition-colors leading-tight">Renaissance Logic</h4>
+<p class="text-xs text-on-surface-variant mt-1">Prof. Marco Polo</p>
+<div class="mt-3 flex items-center gap-1 px-2 py-1 bg-secondary-fixed w-fit rounded-full">
+<span class="text-[10px] font-black text-on-secondary-fixed">14 BKC</span>
+</div>
+</div>
+<!-- Book Card 4 -->
+<div class="group cursor-pointer hidden md:block">
+<div class="aspect-[2/3] rounded-lg overflow-hidden bg-surface-container-low mb-4 shadow-sm group-hover:shadow-xl transition-all group-hover:-translate-y-2">
+<img class="w-full h-full object-cover" data-alt="modern psychology book with abstract pastel colors and hand-drawn neural path illustrations" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAPszOIIV8hbq5PlK1oKh1DdQjOCO3DjRXuZbw0cTR0vUCyjrlnGVGRlt6nGB54QiacLqDA3s6cHKXVF328PFG_gb5S2gyskjfdKAqvEUd6FcOwEeM9Y7IhTdvoV-xyoD0UJ_usFG1TXprXMeHPzu1SJ1gbNtaJEx6vdIj3a_T7W48hHsDWlUDNwsnA40knAOhyNFEobtUZqxRU7z03mxh7391OHSV1wrcSB82Xo_t34CXppCeFDX99ZC7ydGfwBBKQ4NY7yYg8G5o"/>
+</div>
+<h4 class="font-headline font-bold text-on-surface group-hover:text-primary transition-colors leading-tight">Neural Economics</h4>
+<p class="text-xs text-on-surface-variant mt-1">Dr. Jane Foster</p>
+<div class="mt-3 flex items-center gap-1 px-2 py-1 bg-secondary-fixed w-fit rounded-full">
+<span class="text-[10px] font-black text-on-secondary-fixed">21 BKC</span>
+</div>
+</div>
+<!-- Book Card 5 -->
+<div class="group cursor-pointer hidden lg:block">
+<div class="aspect-[2/3] rounded-lg overflow-hidden bg-surface-container-low mb-4 shadow-sm group-hover:shadow-xl transition-all group-hover:-translate-y-2">
+<img class="w-full h-full object-cover" data-alt="clean medical anatomy book cover with high-detail anatomical sketches" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFxfKHdAYom4p3Ts7d5POQC7ByVNYAADsa2LPN_4EHU2Ly9QC43Vvnd0tVfD5KqJoeZ1JR-rLAe66e4swpIKtSVXeZa1LTGyxYC9Nu0xLBuJsmczIsnY6K9wUTvY6HTRGjc7kiBA4_oOxUYSCZAb82-sXzDf5MomLOu5k7o9rwKfifY2izUdaBhceOZaPiBLrNFuHzXC5ri26a31aY3Qzr73ajWax_j5Y-hTF1TEvqDfWf3m0IX97ueAgsb6fiWUsML2qfOEUwKqI"/>
+</div>
+<h4 class="font-headline font-bold text-on-surface group-hover:text-primary transition-colors leading-tight">Applied Biometrics</h4>
+<p class="text-xs text-on-surface-variant mt-1">Dr. Viktor Gray</p>
+<div class="mt-3 flex items-center gap-1 px-2 py-1 bg-secondary-fixed w-fit rounded-full">
+<span class="text-[10px] font-black text-on-secondary-fixed">28 BKC</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-[#f3f4f5] dark:bg-slate-950 mt-12 py-12 px-8 w-full">
+<div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex flex-col items-center md:items-start gap-4">
+<span class="text-lg font-bold text-[#4B0082] font-headline">BookCoin Academic Ledger</span>
+<p class="text-sm font-body text-slate-500">© 2026 BookCoin Academic Ledger. All Rights Reserved.</p>
+</div>
+<div class="flex flex-wrap justify-center gap-8 text-sm font-body text-slate-400">
+<a class="hover:text-[#4B0082] transition-colors" href="#">Terms of Service</a>
+<a class="hover:text-[#4B0082] transition-colors" href="#">Privacy Policy</a>
+<a class="hover:text-[#4B0082] transition-colors" href="#">Institutional Access</a>
+<a class="hover:text-[#4B0082] transition-colors" href="#">API Documentation</a>
+</div>
+</div>
+</footer>
+</body></html>

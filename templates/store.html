@@ -1,0 +1,51 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>BookCoin | Store</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="{% static 'images/bookLogotip.jpg'%}">
+</head>
+
+<body class="bg-gray-950 text-white min-h-screen flex items-center justify-center">
+
+  <div class="w-full max-w-md p-6">
+
+    <h1 class="text-2xl mb-6">Add Transaction</h1>
+
+    <input id="text" type="text" placeholder="Name"
+      class="w-full mb-3 p-3 rounded bg-gray-900 border border-gray-800">
+
+    <input id="amount" type="number" placeholder="Amount (+ / -)"
+      class="w-full mb-3 p-3 rounded bg-gray-900 border border-gray-800">
+
+    <button onclick="add()"
+      class="w-full bg-indigo-600 p-3 rounded-xl mb-4">
+      Save
+    </button>
+
+    <a href="index.html"
+      class="block text-center bg-gray-800 p-3 rounded-xl">
+      ⬅ Back
+    </a>
+
+  </div>
+
+<script src="app.js"></script>
+
+<script>
+  function add() {
+    const text = document.getElementById("text").value;
+    const amount = +document.getElementById("amount").value;
+
+    if (!text || !amount) return alert("Fill all fields");
+
+    addTransaction(text, amount);
+
+    window.location.href = "index.html";
+  }
+</script>
+
+</body>
+</html>

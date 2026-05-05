@@ -1,0 +1,74 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    text-decoration: none;
+    list-style: none;
+}
+
+body {
+    background-color: black;
+}
+
+header .container {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-around;
+}
+
+header .container .logo {
+    display: flex;
+    gap: 10px;
+}
+
+header .container .logo a {
+    width: 30px;
+    height: 30px;
+    background-color: chocolate;
+    color: white;
+    border-radius: 5px;
+    padding: 5px 5px;
+    margin-top: 5px;
+}
+
+header .container .logo {
+    color: white;
+}
+
+header .container nav ul {
+    display: flex;
+    gap: 20px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+header .container nav ul li {
+    cursor: pointer;
+    border: 1px solid white;
+    width: 65px;
+    height: 30px;
+    background-color: chocolate;
+    padding-top: 5px;
+    border-radius: 5px;
+}
+
+header .container nav ul li a {
+    color: white;
+
+}
+
+header .container .login {
+    display: flex;
+    gap: 10px;
+}
+
+header .container .login button {
+    background-color: chocolate;
+    width: 70px;
+    height: 30px;
+    margin-top: 10px;
+}
+
+header .container .login button a {
+    color: white;
+}

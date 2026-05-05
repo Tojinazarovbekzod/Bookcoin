@@ -1,0 +1,124 @@
+{%load static%}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>BookCoin | Support</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="icon" href="{% static 'images/bookLogotip.jpg'%}">
+</head>
+
+<body class="bg-gray-950 text-gray-100 min-h-screen">
+
+  <!-- HEADER -->
+  <div class="max-w-5xl mx-auto p-6 flex justify-between items-center">
+    <h1 class="text-2xl font-semibold">🆘 Support Center</h1>
+
+    <div class="flex gap-3">
+      <a href="{%url 'blog:marketPlace'%}" class="bg-gray-800 px-4 py-2 rounded-lg hover:bg-gray-700">
+        📚 Store
+      </a>
+
+      <a href="{%url 'blog:myBook'%}" class="bg-gray-800 px-4 py-2 rounded-lg hover:bg-gray-700">
+        📖 My Books
+      </a>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="max-w-5xl mx-auto px-6 pb-10">
+
+    <!-- HELP CARDS -->
+    <div style="display: flex; justify-content: space-between; height: 80px;"
+      class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+
+      <div style="width: 50%; height: 100px;" class="bg-gray-900 p-5 rounded-2xl hover:scale-105 transition">
+        <h2 class="text-lg font-semibold">📦 Orders</h2>
+        <p class="text-gray-400 text-sm mt-2">
+          Help with buying books and orders.
+        </p>
+      </div>
+
+      <div style="width: 50%; height: 100px;" class="bg-gray-900 p-5 rounded-2xl hover:scale-105 transition">
+        <h2 class="text-lg font-semibold">📖 Books</h2>
+        <p class="text-gray-400 text-sm mt-2">
+          Problems with downloaded or bought books.
+        </p>
+      </div>
+
+    </div>
+
+    <!-- FAQ -->
+    <div class="mb-10">
+      <h2 class="text-xl font-semibold mb-4">❓ FAQ</h2>
+
+      <div class="space-y-3">
+
+        <div class="bg-gray-900 p-4 rounded-xl">
+          <p class="font-medium">How do I found a book?</p>
+          <p class="text-gray-400 text-sm mt-1">
+            Click the Buy button on any book in marketplace.
+          </p>
+        </div>
+
+        <div class="bg-gray-900 p-4 rounded-xl">
+          <p class="font-medium">Where are my books saved?</p>
+          <p class="text-gray-400 text-sm mt-1">
+            In "My Books" section (stored in your browser).
+          </p>
+        </div>
+
+        <div class="bg-gray-900 p-4 rounded-xl">
+          <p class="font-medium">Can I refund?</p>
+          <p class="text-gray-400 text-sm mt-1">
+            Currently this is demo project (no real payments).
+          </p>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- CONTACT FORM (UI only) -->
+    <form method="POST" action="{%url 'blog:contact_view'%}">
+      {% csrf_token %}
+      <div>
+        <h2 class="text-xl font-semibold mb-4">📩 Contact Us</h2>
+
+        <div class="bg-gray-900 p-6 rounded-2xl space-y-4">
+
+          <input name="name" type="text" placeholder="Your Name" class="w-full p-3 rounded bg-gray-800 border border-gray-700">
+
+          <input name="email" type="email" placeholder="Email" class="w-full p-3 rounded bg-gray-800 border border-gray-700">
+
+          <textarea name="message" placeholder="Message" class="w-full p-3 rounded bg-gray-800 border border-gray-700 h-32"></textarea>
+
+          <button id="send" type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 p-3 rounded-xl">
+            Send Message
+          </button>
+    </form>
+        </div>
+      </div>
+
+  </div>
+
+
+
+  <script>
+    let btn = document.getElementById("send");
+
+    btn.addEventListener("click", () => {
+      let name = document.querySelector("input[type='text']").value;
+      let email = document.querySelector("input[type='email']").value;
+      let message = document.querySelector("textarea").value;
+
+      let subject = `Support message from ${name}`;
+      let body = `Name: ${name}%0AEmail: ${email}%0AMessage: ${message}`;
+
+      window.location.href =
+        `mailto:bekzodtojinazar@gmail.com?subject=${subject}&body=${body}`;
+    });
+  </script>
+</body>
+
+</html>

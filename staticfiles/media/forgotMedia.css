@@ -1,0 +1,267 @@
+@media (max-width: 767px) {
+    .container {
+        animation-name: container-anim;
+        animation-duration: 0.9s;
+        animation-fill-mode: forwards;
+        animation-timing-function: linear;
+        color: white;
+
+    }
+
+    @keyframes container-anim {
+        0% {
+            transform: scale(0);
+        }
+
+        50% {
+            transform: scale(0.5);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+    .container {
+        width: 450px;
+        height: 430px;
+        border: 1px solid gray;
+        color: white;
+        margin: 0 auto;
+        padding: 5px 15px;
+        background: url("../images/fon.jpg") no-repeat center center / cover;
+        margin-top: 40px;
+
+    }
+
+    .container .center h1 {
+        font-size: 40px;
+        font-family: "Funnel Sans", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: weight;
+    }
+
+    .container .border {
+        width: 320px;
+        height: 300px;
+        margin: 0 auto;
+        border: 1px solid gray;
+        border-radius: 10px;
+        background-color: rgba(75, 75, 75, 0.693);
+        padding: 20px 10px;
+    }
+
+    .container form .border input {
+        width: 300px;
+        height: 40px;
+        margin: 0 auto;
+        margin-bottom: 40px;
+        margin-top: 20px;
+        font-size: 15px;
+        padding-left: 15px;
+        font-family: "Funnel Sans", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: weight;
+        color: black;
+    }
+
+    .container form .border .checked {
+        display: flex;
+        position: relative;
+    }
+
+    .container form .border .checked img {
+        position: absolute;
+        margin-left: 250px;
+        width: 30px;
+        height: 30px;
+        margin-top: 25px;
+    }
+
+
+    .container form .border #btn {
+        width: 300px;
+        height: 40px;
+        margin: 0 auto;
+        font-size: 20px;
+        color: white;
+        background-color: blue;
+        font-family: "Funnel Sans", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: weight;
+        transition: color 0.8s;
+        transition: background-color 0.8s;
+        cursor: pointer;
+    }
+
+    .container form .border #btn:hover {
+        background-color: white;
+        color: blue;
+        cursor: pointer;
+    }
+
+
+
+}
+
+@media (max-width: 546px) {
+    .container {
+        width: 350px;
+        height: 400px;
+        border: 1px solid gray;
+        color: white;
+        margin: 0 auto;
+        padding: 5px 15px;
+        background: url("../images/fon.jpg") no-repeat center center / cover;
+        margin-top: 40px;
+
+    }
+
+    .container {
+        animation-name: container-anim;
+        animation-duration: 0.9s;
+        animation-fill-mode: forwards;
+        animation-timing-function: linear;
+
+    }
+
+    @keyframes container-anim {
+        0% {
+            transform: scale(0);
+        }
+
+        50% {
+            transform: scale(0.5);
+        }
+
+        100% {
+            transform: scale(1);
+        }
+    }
+
+    .container .center h1 {
+        font-size: 30px;
+        font-family: "Funnel Sans", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: weight;
+    }
+
+    .container .border {
+        width: 300px;
+        height: 270px;
+        margin: 0 auto;
+        border: 1px solid gray;
+        display: flex;
+        flex-direction: column;
+        border-radius: 10px;
+        background-color: rgba(75, 75, 75, 0.693);
+        padding: 20px 10px;
+    }
+
+    .container form .border input {
+        width: 250px;
+        height: 30px;
+        margin: 0 auto;
+        margin-bottom: 40px;
+        margin-top: 20px;
+        font-size: 16px;
+        padding-left: 15px;
+        font-family: "Funnel Sans", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: weight;
+        color: black;
+    }
+
+    .container form .border .checked {
+        display: flex;
+        position: relative;
+    }
+
+    .container form .border .checked #int2 {
+        width: 250px;
+        height: 30px;
+        margin: 0 auto;
+        margin-bottom: 40px;
+        margin-top: 20px;
+        font-size: 16px;
+        padding-left: 15px;
+        font-family: "Funnel Sans", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: weight;
+        color: black;
+    }
+
+    .container form .border .checked img {
+        position: absolute;
+        margin-left: 210px;
+        width: 40px;
+        height: 40px;
+        margin-top: 15px;
+    }
+
+
+    .container form .border #btn {
+        width: 250px;
+        height: 30px;
+        margin: 0 auto;
+        font-size: 16px;
+        color: white;
+        background-color: blue;
+        font-family: "Funnel Sans", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: weight;
+        transition: color 0.8s;
+        transition: background-color 0.8s;
+        cursor: pointer;
+    }
+
+    .container form .border #btn:hover {
+        background-color: white;
+        color: blue;
+        cursor: pointer;
+    }
+
+    .container form .border .Sign {
+        text-align: center;
+        padding-top: 25px;
+    }
+
+    .container form .border .Sign a {
+        color: white;
+        font-size: 16px;
+        font-family: "Funnel Sans", sans-serif;
+        font-optical-sizing: auto;
+        font-weight: weight;
+    }
+
+    .container form img {
+        width: 20px;
+        height: 20px;
+        margin: 20px auto;
+        border-radius: 50%;
+    }
+
+    .container form .Forgot {
+        width: 280px;
+        height: 40px;
+        margin: 0 auto;
+        background-color: rgba(75, 75, 75, 0.693);
+        font-size: 16px;
+        margin-bottom: 20px;
+        font-family: "Funnel Sans", sans-serif;
+        font-weight: weight;
+    }
+
+    .container form .Forgot a {
+        color: white;
+    }
+
+    .container .paragraf {
+        width: 260px;
+        font-size: 10px;
+        text-align: center;
+        margin: 0 auto;
+        font-family: "Funnel Sans", sans-serif;
+    }
+
+
+}

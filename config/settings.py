@@ -11,9 +11,17 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 import os
 from pathlib import Path
-import pymysql
-pymysql.install_as_MySQLdb()
 
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql',  
+        'NAME': 'bookcoin',
+        'USER': 'root',
+        'PASSWORD': 'admin12345',
+        'LOCALHOST': '127.0.0.1',
+        'PORT': '3306',
+    }
+}
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -23,19 +31,27 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-w+m3=0p1@jounnbkpi3lrui6=chzp*eqb=1q+fn(v81&_r$@i!"
-
+from dotenv import load_dotenv
+load_dotenv()
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = []
-
+SECRET_KEY=os.getenv('SECRET_KEY')
+ALLOWED_HOSTS = ['*']
 
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [BASE_DIR / 'static']  # dev uchun
+STATICFILES_DIRS = [BASE_DIR / 'static']  
 # PROD-da:
 # STATIC_ROOT = BASE_DIR / 'staticfiles'
 
+
+#Email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = 'bekzodtojinazar@gmail.com'
+EMAIL_HOST_PASSWORD = 'vsqehlgaadzhkxcj'
 
 # Application definition
 
@@ -84,26 +100,13 @@ WSGI_APPLICATION = "config.wsgi.application"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 
+
 # DATABASES = {
 #     'default': {
 #         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': BASE_DIR / "db.sqlite3",
+#         'NAME': BASE_DIR / 'db.sqlite3',
 #     }
 # }
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'bookcoin',
-        'USER': 'root',
-        'PASSWORD': 'admin12345',
-        'localhost': '127.0.0.1',  
-        'PORT': '3307',
-    }
-}
-
-
-
 
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators

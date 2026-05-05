@@ -1,4 +1,5 @@
 from django.shortcuts import render, redirect
+from django.core.mail import send_mail
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.hashers import make_password, check_password
@@ -7,11 +8,56 @@ from .models import User
 import json
 
 
-def main(request):
+def home_page(request):   
     return render(request, "main.html")
 
-def forgot(request):
-    return render(request, "forgot.html")
+def catalog(request):
+    return render(request, "Catalog.html")
+
+def bookDetail(request):
+    return render(request, "bookDetail.html")
+
+def studentDashboard(request):
+    return render(request, "studentDashboard.html")
+
+def settings_page(request):
+    return render(request, "settings.html")
+
+def marketPlace(request):
+    return render(request, "marketPlace.html")
+
+def myBook(request):
+    return render(request, "myBook.html")
+
+def store(request):
+    return render(request, "store.html")
+
+def support(request):
+    return render(request, "support.html")
+
+def credits(request):
+    return render(request, "credits.html")
+
+
+def contact_view(request):
+    if request.method == "POST":
+        name = request.POST.get("name")
+        email = request.POST.get("email")
+        message = request.POST.get("message")
+
+        send_mail(
+            subject=f"New message from {name}",
+            message=f"From: {email}\n\nMessage:\n{message}",
+            from_email=email,
+            recipient_list=['yourgmail@gmail.com'],
+            fail_silently=False,
+        )
+
+        return render(request, 'studentDashboard.html')
+
+    return render(request, "main.html")
+
+
 
 def login(request):
     if request.method == "POST":
@@ -112,3 +158,5 @@ def api_signup(request):
 
 
 
+def main(request):
+    return render(request, "main.html")

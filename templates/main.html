@@ -1,263 +1,559 @@
 {%load static%}
 <!DOCTYPE html>
-<html lang="en">
+
+<html class="light" lang="en">
 
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BookCoin</title>
-  <link rel="stylesheet" href="{% static 'css/main.css' %}?v=2">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <link rel="icon" href="{% static 'images/bookLogotip.jpg'%}">
+  <title>BookCoin | The Academic Ledger</title>
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Inter:wght@300;400;500;600;700&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+    rel="stylesheet" />
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "on-tertiary-fixed": "#2f1500",
+            "surface": "#f8f9fa",
+            "surface-tint": "#7b41b3",
+            "outline-variant": "#cec3d3",
+            "surface-container": "#edeeef",
+            "on-surface-variant": "#4c4451",
+            "on-tertiary-container": "#c98c5c",
+            "outline": "#7d7483",
+            "on-secondary": "#ffffff",
+            "on-surface": "#191c1d",
+            "surface-container-lowest": "#ffffff",
+            "on-secondary-fixed": "#221b00",
+            "tertiary-fixed-dim": "#fbb884",
+            "on-primary": "#ffffff",
+            "secondary-container": "#fcd400",
+            "error-container": "#ffdad6",
+            "surface-container-high": "#e7e8e9",
+            "surface-bright": "#f8f9fa",
+            "surface-container-low": "#f3f4f5",
+            "background": "#f8f9fa",
+            "on-primary-fixed-variant": "#622599",
+            "surface-container-highest": "#e1e3e4",
+            "on-primary-fixed": "#2c0050",
+            "on-secondary-fixed-variant": "#544600",
+            "secondary": "#705d00",
+            "on-background": "#191c1d",
+            "tertiary": "#301600",
+            "secondary-fixed": "#ffe16d",
+            "inverse-on-surface": "#f0f1f2",
+            "on-error-container": "#93000a",
+            "primary-fixed": "#f0dbff",
+            "inverse-primary": "#ddb7ff",
+            "primary-container": "#4b0082",
+            "secondary-fixed-dim": "#e9c400",
+            "surface-variant": "#e1e3e4",
+            "primary": "#2e0052",
+            "tertiary-container": "#4f2700",
+            "tertiary-fixed": "#ffdcc3",
+            "on-tertiary-fixed-variant": "#693c12",
+            "on-tertiary": "#ffffff",
+            "error": "#ba1a1a",
+            "primary-fixed-dim": "#ddb7ff",
+            "surface-dim": "#d9dadb",
+            "inverse-surface": "#2e3132",
+            "on-secondary-container": "#6e5c00",
+            "on-primary-container": "#ba7ef4",
+            "on-error": "#ffffff"
+          },
+          "borderRadius": {
+            "DEFAULT": "1rem",
+            "lg": "2rem",
+            "xl": "3rem",
+            "full": "9999px"
+          },
+          "fontFamily": {
+            "headline": ["Space Grotesk"],
+            "body": ["Inter"],
+            "label": ["Inter"]
+          }
+        },
+      }
+    }
+  </script>
+  <style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+    }
+
+    h1,
+    h2,
+    h3,
+    .font-headline {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(20px);
+    }
+
+    .hero-gradient {
+      background: linear-gradient(135deg, #2e0052 0%, #4b0082 100%);
+    }
+
+    button #black {
+      color: black;
+    }
+  </style>
 </head>
 
-<body>
-
-  <div class="container">
-    <header>
-      <div class="brand">
-        <div class="logo">BC</div>
-        <div>
-          <h1>Book Coin</h1>
-          <div class="muted" style="font-size:12px">Kutubxona & katalog</div>
+<body class="bg-surface text-on-surface selection:bg-secondary-fixed selection:text-on-secondary-fixed">
+  <!-- Top Navigation -->
+  <nav
+    class="fixed top-0 w-full z-50 bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl shadow-[0px_20px_40px_rgba(46,0,82,0.06)]">
+    <div class="flex items-center justify-between px-8 py-4 max-w-screen-2xl mx-auto">
+      <div class="flex items-center gap-12">
+        <span
+          class="text-2xl font-bold tracking-tighter text-[#4B0082] dark:text-white font-['Space_Grotesk']">BookCoin</span>
+        <div class="hidden md:flex items-center gap-8 font-['Space_Grotesk'] tracking-tight">
+          <a class="text-[#4B0082] dark:text-white border-b-2 border-[#fcd400] pb-1"
+            href="{%url 'blog:catalog'%}">Catalog</a>
+          <a class="text-slate-500 dark:text-slate-400 hover:text-[#4B0082] transition-colors"
+            href="{%url 'blog:studentDashboard'%}">Dashboard</a>
+          <a class="text-slate-500 dark:text-slate-400 hover:text-[#4B0082] transition-colors"
+            href="{%url 'blog:bookDetail'%}">Library</a>
+          <a class="text-slate-500 dark:text-slate-400 hover:text-[#4B0082] transition-colors"
+            href="https://t.me/New_bookcoin_bot">Test</a>
         </div>
       </div>
-      <nav class="nav" aria-label="Main navigation">
-        <a href="#">Katalog</a>
-        <a href="#">Jurnallar</a>
-        <a href="#">Yordam</a>
-        <a class="cta" href="{% url 'blog:login' %}">Ro'yxatdan o'tish</a>
-      </nav>
-    </header>
-
-    <section class="hero">
-      <div class="hero-left">
-        
-        <div class="search">
-          <input id="search" placeholder="Kitob, muallif yoki ISBN bo'yicha qidirish..." aria-label="qidiruv" />
-          <button id="btn">Qidirish</button>
+      <div class="flex items-center gap-6">
+        <div class="hidden sm:flex items-center gap-4">
+          <span class="material-symbols-outlined text-slate-400 ml-4">search</span>
+          <button
+            class="material-symbols-outlined text-slate-500 hover:bg-slate-50 p-2 rounded-full transition-colors active:scale-95 duration-200">notifications</button>
+          <button
+            class="material-symbols-outlined text-slate-500 hover:bg-slate-50 p-2 rounded-full transition-colors active:scale-95 duration-200">history</button>
         </div>
-        <div style="margin-top:18px;display:flex;gap:10px">
-
-        </div>
+        <button
+          class="hidden lg:block px-6 py-2 rounded-full font-bold text-[#4B0082] hover:bg-slate-50 transition-colors active:scale-95 duration-200"><a
+            style="color: black;" href="{%url 'blog:login'%}">Login</a></button>
+        <button
+          class="px-6 py-2 bg-primary-container text-on-primary-container rounded-full font-bold shadow-sm hover:opacity-90 active:scale-95 transition-all">Add
+          Funds</button>
       </div>
-
-
-      <!-- <aside class="hero-right">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-          
-        </div>
-      </aside> -->
-    </section>
-     <div class="book1">
-        <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
-        <img src="./Img/60e588568e53cccb7d4a87c14537998d.jpg" alt="">
-        <img src="./Img/2.jpg" alt="">
     </div>
-
-    <main>
-      <div class="filters">
-        <div class="pill">Hammasi</div>
-        <div class="pill">Falsafa</div>
-        <div class="pill">Ilm-fan</div>
-        <div class="pill">Badiiy</div>
+  </nav>
+  <main class="pt-20">
+    <!-- Hero Section -->
+    <section class="relative min-h-[870px] flex items-center justify-center overflow-hidden px-6">
+      <div class="absolute inset-0 z-0">
+          <img style="width: 100%;" src="{%static 'images/Logo_Library.jpg'%}" alt="">
+        <div class="absolute inset-0 bg-primary/60 backdrop-blur-[2px]"></div>
       </div>
+      <div class="relative z-10 max-w-5xl w-full text-center space-y-12">
+        <div class="space-y-6">
+          <span
+            class="inline-block px-4 py-1.5 rounded-full bg-secondary-fixed text-on-secondary-fixed font-bold text-sm tracking-wider">REVOLUTIONIZING
+            ACADEMIC ACCESS</span>
+          <h1 class="text-6xl md:text-8xl font-black text-white tracking-tighter leading-[0.9]">
+            The Currency <br />
+            <span class="text-secondary-fixed-dim">of Knowledge.</span>
+          </h1>
+          <p class="text-lg md:text-xl text-white/80 max-w-2xl mx-auto font-body leading-relaxed">
+            Access millions of academic resources, earn credits for your research, and build your scholarly portfolio on
+            the most advanced ledger in education.
+          </p>
+        </div>
+        <!-- Search Bar Container -->
+        <div class="relative max-w-3xl mx-auto">
+          <div class="flex items-center bg-white p-2 rounded-xl shadow-2xl">
+            <span class="material-symbols-outlined text-slate-400 ml-4">search</span>
+            <input id="search-input" class="w-full border-none focus:ring-0 text-lg py-4 px-4 font-body"
+              placeholder="Search by title, author, or ISBN..." type="text" />
+            <button
+              class="bg-primary-container text-white px-8 py-4 rounded-lg font-bold hover:bg-primary transition-all active:scale-95 whitespace-nowrap">
+              Search Library
+            </button>
+          </div>
+          <div id="search-results"
+            class="search-results hidden absolute top-full left-0 right-0 bg-white mt-2 rounded-xl shadow-2xl z-50 max-h-80 overflow-y-auto border border-purple-200 w-full max-w-3xl">
+          </div>
+          <div class="flex justify-center gap-4 mt-6 text-white/60 text-sm font-medium">
+            <span>Trending:</span>
 
-      <section class="grid" id="list" aria-label="book list">
-        
-        
+            <a class="text-secondary-fixed hover:text-white transition-colors underline decoration-secondary-fixed/30 underline-offset-4"
+              href="#">Quantum Physics</a>
+            <a class="text-secondary-fixed hover:text-white transition-colors underline decoration-secondary-fixed/30 underline-offset-4"
+              href="#">Blockchain Law</a>
+            <a class="text-secondary-fixed hover:text-white transition-colors underline decoration-secondary-fixed/30 underline-offset-4"
+              href="#">Neurobiology</a>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Trending Slider Section -->
+    <section class="py-24 bg-surface">
+      <div class="max-w-screen-2xl mx-auto px-8">
+        <div class="flex justify-between items-end mb-12">
+          <div class="space-y-2">
+            <h2 class="text-4xl font-bold text-primary tracking-tight">Trending in the Ledger</h2>
+            <p class="text-on-surface-variant font-body">Most valuable assets currently circulating.</p>
+          </div>
+          <div class="flex gap-2">
+            <button
+              class="w-12 h-12 rounded-full border border-outline-variant flex items-center justify-center hover:bg-white transition-all">
+              <span class="material-symbols-outlined">chevron_left</span>
+            </button>
+            <button
+              class="w-12 h-12 rounded-full border border-outline-variant flex items-center justify-center hover:bg-white transition-all">
+              <span class="material-symbols-outlined">chevron_right</span>
+            </button>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          <!-- Book Card 1 -->
+          <div
+            class="group bg-surface-container-lowest p-6 rounded-lg transition-all hover:shadow-[0px_20px_40px_rgba(46,0,82,0.06)] relative overflow-hidden border border-transparent hover:border-secondary-fixed-dim/20">
+            <div class="aspect-[3/4] rounded mb-6 overflow-hidden bg-surface-container-low relative">
+              <img class="w-full h-full object-cover transition-transform group-hover:scale-105 duration-500"
+                data-alt="modern book cover design with geometric gold foil patterns on a deep violet background, entitled Principles of Modern Economics"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe9XdXwlFt50sLhaxWXr16Qwl6F6RiOR-nIZiS48teBKTPE33esT5xkZOHJbqNWd-eJ-inMsQjKs8qFUDKM4wj-pxymGZoWTv-PF37a8rb0yZghlvu3x0JQRAof1dEpW_qwaHa1N1epLlF28hPrOJnkkJpALv9pyLQlnMHBUoFfHMzFIyGZFUPF-OEuynBoX-gU788yoOVejJ_0LPti8sV5_-v65nvdH-LLIik7R33JrendMYg_LNQNIMHi0C5rYeHL_Ok6LIM0P4" />
+              <div
+                class="absolute top-4 right-4 bg-secondary-fixed px-3 py-1 rounded-full text-xs font-black shadow-lg">
+                12.5 BKC</div>
+            </div>
+            <div class="space-y-2">
+              <h3 class="font-bold text-lg text-primary leading-tight">Advanced Algorithms</h3>
+              <p class="text-sm text-on-surface-variant">Prof. Helena Vance</p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-surface-container flex justify-between items-center">
+              <div class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-secondary text-sm"
+                  style="font-variation-settings: 'FILL' 1;">star</span>
+                <span class="text-xs font-bold text-primary">4.9</span>
+              </div>
+              <button class="text-primary font-bold text-sm hover:underline">Redeem Now</button>
+            </div>
+          </div>
+          <!-- Book Card 2 -->
+          <div
+            class="group bg-surface-container-lowest p-6 rounded-lg transition-all hover:shadow-[0px_20px_40px_rgba(46,0,82,0.06)] relative overflow-hidden border border-transparent hover:border-secondary-fixed-dim/20">
+            <div class="aspect-[3/4] rounded mb-6 overflow-hidden bg-surface-container-low relative">
+              <img class="w-full h-full object-cover transition-transform group-hover:scale-105 duration-500"
+                data-alt="clean minimalist book cover with architectural lines and soft sage and gold accents, title The Future of Urban Planning"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnTwB4Z4gbug5Ff55p0YEUmrFqtaVA3hPjhnQftJ2XBCOjjXfPOf02xi6HSYjPHtJGq6ZygPrDYHKwpxE-GCeZrLgWRCH3jwUuAguu5EpLq8aXs-OVkIQ2axIKIlcvvfvwAot9Z-5nN-TTUe5A988kHKVseCVyGtHPUZVNd6xEEmu8HVGQiyeAztqHiYZ4ENWMUAzX35F10aZnKvi-6i_Xry3FDewmdHBvpqhJ6Mln7zz5VUxBA3iX_cU75ysDIcMxL94OuSnx6bM" />
+              <div
+                class="absolute top-4 right-4 bg-secondary-fixed px-3 py-1 rounded-full text-xs font-black shadow-lg">
+                8.2 BKC</div>
+            </div>
+            <div class="space-y-2">
 
-        <!-- Book card 3 -->
-        <article class="card">
-  <div class="thumb">
-    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
-    <small class="muted"></small>
-  </div>
-  <div class="meta">
-    <h3>Hayot falsafasi</h3>
-    <p class="muted">S. Aliyev • 2016</p>
-    <div class="tags"><span class="tag">Falsafa</span></div>
-  </div>
-</article>
+              <h3 class="font-bold text-lg text-primary leading-tight">Urban Bio-Systems</h3>
+              <p class="text-sm text-on-surface-variant">Dr. Marcus Thorne</p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-surface-container flex justify-between items-center">
+              <div class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-secondary text-sm"
+                  style="font-variation-settings: 'FILL' 1;">star</span>
+                <span class="text-xs font-bold text-primary">4.7</span>
+              </div>
+              <button class="text-primary font-bold text-sm hover:underline">Redeem Now</button>
+            </div>
+          </div>
+          <!-- Book Card 3 -->
+          <div
+            class="group bg-surface-container-lowest p-6 rounded-lg transition-all hover:shadow-[0px_20px_40px_rgba(46,0,82,0.06)] relative overflow-hidden border border-transparent hover:border-secondary-fixed-dim/20">
+            <div class="aspect-[3/4] rounded mb-6 overflow-hidden bg-surface-container-low relative">
+              <img class="w-full h-full object-cover transition-transform group-hover:scale-105 duration-500"
+                data-alt="abstract book cover with fluid marble textures in gold and purple, title Ethics in the Digital Age"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuDimv-UuliY_3CbM8etK-g9re7Cz15gm3mDenjeHEkN9JlLu1dbLuZaxdpMOx1roX58RV5KP5qoHXrzHnTfG3XP_ubfD6NZQAfP3oyXCNP74WYScszCbXhdg2cWvDa3VU4qewM-JSpHc0pTOjPa9Cs4mZpVR60bGkuaw_ICo1WndotbVUQJwfPbg89wm4heafP-lVjzPkdmzfzO-lT-IgwVbqM9rE6bwDV03dPBvyrRKptNM751mdneQuQRKLfhZzcI-XAT1H2WQjo" />
+              <div
+                class="absolute top-4 right-4 bg-secondary-fixed px-3 py-1 rounded-full text-xs font-black shadow-lg">
+                15.0 BKC</div>
+            </div>
+            <div class="space-y-2">
+              <h3 class="font-bold text-lg text-primary leading-tight">AI &amp; Human Ethics</h3>
+              <p class="text-sm text-on-surface-variant">Sarah Jenkins, PhD</p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-surface-container flex justify-between items-center">
+              <div class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-secondary text-sm"
+                  style="font-variation-settings: 'FILL' 1;">star</span>
+                <span class="text-xs font-bold text-primary">5.0</span>
+              </div>
+              <button class="text-primary font-bold text-sm hover:underline">Redeem Now</button>
+            </div>
+          </div>
+          <!-- Book Card 4 -->
+          <div
+            class="group bg-surface-container-lowest p-6 rounded-lg transition-all hover:shadow-[0px_20px_40px_rgba(46,0,82,0.06)] relative overflow-hidden border border-transparent hover:border-secondary-fixed-dim/20">
+            <div class="aspect-[3/4] rounded mb-6 overflow-hidden bg-surface-container-low relative">
+              <img class="w-full h-full object-cover transition-transform group-hover:scale-105 duration-500"
+                data-alt="scientific book cover with molecular diagrams highlighted in gold neon lines on dark navy, title Genomic Frontiers"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAR8mDkF16v9T3fR6kymHtdwiPN-J8t35m0iPus08i__vHrUNqIYfZBrS2zuNMBi6xx_Z3L2JW7DIeb9fUnc4cISy9N7xINh1vFAqIkJ0wAhC0fCO1SUqQSTOi5E12byAUv6oYFSVwrgnlCDaZOeB1QfB6Ly6wTYXtNXt9WL-prtFGJBB0bjtXNmElHawrfwEXxroS9AhU7ygqygFu8tAshHzgz9WN2QatA9jR2-7thnGmAUJ2LdItJ8-K-HGY0iG2-c9EViAfEKF0" />
+              <div
+                class="absolute top-4 right-4 bg-secondary-fixed px-3 py-1 rounded-full text-xs font-black shadow-lg">
+                22.4 BKC</div>
+            </div>
+            <div class="space-y-2">
+              <h3 class="font-bold text-lg text-primary leading-tight">Genomic Structures</h3>
+              <p class="text-sm text-on-surface-variant">The Research Institute</p>
+            </div>
+            <div class="mt-4 pt-4 border-t border-surface-container flex justify-between items-center">
+              <div class="flex items-center gap-1">
+                <span class="material-symbols-outlined text-secondary text-sm"
+                  style="font-variation-settings: 'FILL' 1;">star</span>
+                <span class="text-xs font-bold text-primary">4.8</span>
+              </div>
+              <button class="text-primary font-bold text-sm hover:underline">Redeem Now</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- Category Grid (Bento Style) -->
+    <section class="py-24 bg-surface-container-low">
+      <div class="max-w-screen-2xl mx-auto px-8">
+        <h2 class="text-4xl font-bold text-primary tracking-tight mb-16 text-center">Curated Faculties</h2>
+        <div class="grid grid-cols-1 md:grid-cols-6 grid-rows-2 gap-6 h-auto md:h-[600px]">
 
-<article class="card">
-  <div class="thumb">
-    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
-    <small class="muted"></small>
-  </div>
-  <div class="meta">
-    <h3>Hayot falsafasi</h3>
-    <p class="muted">S. Aliyev • 2016</p>
-    <div class="tags"><span class="tag">Falsafa</span></div>
-  </div>
-</article>
+          <!-- Large Feature: STEM -->
+          <div class="md:col-span-3 md:row-span-2 group relative overflow-hidden rounded-lg bg-primary">
+            <img
+              class="absolute inset-0 w-full h-full object-cover opacity-60 transition-transform duration-700 group-hover:scale-110"
+              data-alt="high-tech laboratory with glowing blue and gold equipment and futuristic holographic displays"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBz_GKGi4FkiIfTGjVyoOvDievwkcrO9Lg2UAbY8_K_bJBaRoY3KWN9UqQAOqDYHc1q0Cr1t4CyeFzua5W2mw1FPPVJ-ayM5mtETaFpjqjww81aBoldUEaAwv4cmXhPj-tjreooBdJ_sCnQyEpNeYtkgxnrELGdDmUT0pt6QYz-1AVRrHyrYXDd_huUVawzAlMRstXAJSCLGJeghC2mxQ0cGb6U4Pa-nrsk4gqMZcuNn95LhE455ZzF7XhAMp0AjWcrbobvGUyUxyc" />
+            <div class="absolute inset-0 bg-gradient-to-t from-primary via-primary/20 to-transparent"></div>
+            <div class="absolute bottom-8 left-8 right-8">
+              <h3 class="text-3xl font-black text-white mb-2">STEM &amp; Applied Sciences</h3>
+              <p class="text-white/70 mb-6 max-w-sm">Over 450,000 peer-reviewed papers and interactive textbooks across
+                all scientific disciplines.</p>
+              <button
+                class="px-6 py-2 bg-secondary-fixed text-on-secondary-fixed rounded-full font-bold transition-transform active:scale-95">Explore
+                Faculty</button>
+            </div>
+          </div>
+          <!-- Economics -->
+          <div class="md:col-span-3 md:row-span-1 group relative overflow-hidden rounded-lg bg-tertiary-container">
+            <img
+              class="absolute inset-0 w-full h-full object-cover opacity-50 transition-transform duration-700 group-hover:scale-110"
+              data-alt="close up of financial charts and trading floor data projected on a glass surface with golden lighting"
+              src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjHlWv2aKEtgMZpsUvxws9kj7JX-xYJZI0Qcc7-E2C_uSQgzpV4CNfhNdrq30-macExOB8djV1N3b5fgcWnAlDXb7Tx7dcvFTWiNgZvKOEx3awRe1ASXUysDZcFHaY0KLglpOO2aqp1Ra0nNrgvFxTJTdhKOc-JqQY8ByMdVZmuOvTQAHiENVZHxx77h03oErGTOwGV-rp8ElKmSDWiejUlJ7cXKcQ1tDTsx69xzO6LS-y31cJQc4ZBhJt4yWm7XjD5fFXK5N_A50" />
+            <div class="absolute inset-0 bg-gradient-to-r from-tertiary-container to-transparent"></div>
+            <div class="absolute inset-y-0 left-8 flex flex-col justify-center">
+              <h3 class="text-2xl font-bold text-white mb-2">Finance &amp; Economy</h3>
+              <button class="text-secondary-fixed font-bold flex items-center gap-2 group/btn">
+                Browse Journals <span
+                  class="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+              </button>
+            </div>
+          </div>
+          <!-- Humanities -->
+          <div
+            class="md:col-span-1 md:row-span-1 group relative overflow-hidden rounded-lg bg-on-tertiary-fixed-variant">
+            <div class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+              <span class="material-symbols-outlined text-secondary-fixed text-4xl mb-4">history_edu</span>
+              <h3 class="font-bold text-white leading-tight">Humanities &amp; Arts</h3>
+            </div>
+          </div>
+          <!-- Law -->
+          <div
+            class="md:col-span-2 md:row-span-1 group relative overflow-hidden rounded-lg bg-surface-container-highest border border-outline-variant/30">
+            <div class="absolute inset-0 p-8 flex flex-col justify-between">
+              <span class="material-symbols-outlined text-primary text-3xl">gavel</span>
+              <div>
+                <h3 class="text-xl font-bold text-primary mb-1">Legal Ledger</h3>
+                <p class="text-sm text-on-surface-variant">Global case laws &amp; statutes</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- CTA Section -->
+    <section class="py-24 px-8">
+      <div class="max-w-7xl mx-auto bg-primary-container rounded-xl overflow-hidden shadow-2xl relative">
+        <div class="absolute top-0 right-0 w-1/3 h-full overflow-hidden opacity-30">
+          <img class="w-full h-full object-cover"
+            data-alt="abstract flowing golden silk fabric in a vacuum, illuminated by deep violet light"
+            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBjp6rEo6NAee18xVH_ApXW6DKfTXCgKjofw6eHp0lH3pnC_3-HSIMTLEvRY_RyXryODGuKxhWQjdmhAbqp8KYy6SnUwTcpZKasWNVB9qKzD_jsLxTGm7t6CjXuo9DYaBjcVAU6FOoV089k5h4ZEp4tJ2Gmv5l6Ug19YJnn_0dz0huSVfp5mwBf51qnKTTCtpT5kGd_C4X1ykl8ctKRxuDH7R-KifhRrq3RtN3xHvvFymOqoUfAamgtlRlcrp8WcaWp09rI1aQL8ZU" />
+        </div>
 
-<article class="card">
-  <div class="thumb">
-    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
-    <small class="muted"></small>
-  </div>
-  <div class="meta">
-    <h3>Hayot falsafasi</h3>
-    <p class="muted">S. Aliyev • 2016</p>
-    <div class="tags"><span class="tag">Falsafa</span></div>
-  </div>
-</article>
-<article class="card">
-  <div class="thumb">
-    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
-    <small class="muted"></small>
-  </div>
-  <div class="meta">
-    <h3>Hayot falsafasi</h3>
-    <p class="muted">S. Aliyev • 2016</p>
-    <div class="tags"><span class="tag">Falsafa</span></div>
-  </div>
-</article>
-
-<article class="card">
-  <div class="thumb">
-    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
-    <small class="muted"></small>
-  </div>
-  <div class="meta">
-    <h3>Hayot falsafasi</h3>
-    <p class="muted">S. Aliyev • 2016</p>
-    <div class="tags"><span class="tag">Falsafa</span></div>
-  </div>
-</article>
-
-<article class="card">
-  <div class="thumb">
-    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
-    <small class="muted"></small>
-  </div>
-  <div class="meta">
-    <h3>Hayot falsafasi</h3>
-    <p class="muted">S. Aliyev • 2016</p>
-    <div class="tags"><span class="tag">Falsafa</span></div>
-  </div>
-</article>
-<article class="card">
-  <div class="thumb">
-    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
-    <small class="muted"></small>
-  </div>
-  <div class="meta">
-    <h3>Hayot falsafasi</h3>
-    <p class="muted">S. Aliyev • 2016</p>
-    <div class="tags"><span class="tag">Falsafa</span></div>
-  </div>
-</article>
-
-<article class="card">
-  <div class="thumb">
-    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
-    <small class="muted"></small>
-  </div>
-  <div class="meta">
-    <h3>Hayot falsafasi</h3>
-    <p class="muted">S. Aliyev • 2016</p>
-    <div class="tags"><span class="tag">Falsafa</span></div>
-  </div>
-</article>
-
-<article class="card">
-  <div class="thumb">
-    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
-    <small class="muted"></small>
-  </div>
-  <div class="meta">
-    <h3>Hayot falsafasi</h3>
-    <p class="muted">S. Aliyev • 2016</p>
-    <div class="tags"><span class="tag">Falsafa</span></div>
-  </div>
-</article>
-<article class="card">
-  <div class="thumb">
-    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
-    <small class="muted"></small>
-  </div>
-  <div class="meta">
-    <h3>Hayot falsafasi</h3>
-    <p class="muted">S. Aliyev • 2016</p>
-    <div class="tags"><span class="tag">Falsafa</span></div>
-  </div>
-</article>
-
-<article class="card">
-  <div class="thumb">
-    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
-    <small class="muted"></small>
-  </div>
-  <div class="meta">
-    <h3>Hayot falsafasi</h3>
-    <p class="muted">S. Aliyev • 2016</p>
-    <div class="tags"><span class="tag">Falsafa</span></div>
-  </div>
-</article>
-
-<article class="card">
-  <div class="thumb">
-    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
-    <small class="muted"></small>
-  </div>
-  <div class="meta">
-    <h3>Hayot falsafasi</h3>
-    <p class="muted">S. Aliyev • 2016</p>
-    <div class="tags"><span class="tag">Falsafa</span></div>
-  </div>
-</article>
-<article class="card">
-  <div class="thumb">
-    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
-    <small class="muted"></small>
-  </div>
-  <div class="meta">
-    <h3>Hayot falsafasi</h3>
-    <p class="muted">S. Aliyev • 2016</p>
-    <div class="tags"><span class="tag">Falsafa</span></div>
-  </div>
-</article>
-
-<article class="card">
-  <div class="thumb">
-    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
-    <small class="muted"></small>
-  </div>
-  <div class="meta">
-    <h3>Hayot falsafasi</h3>
-    <p class="muted">S. Aliyev • 2016</p>
-    <div class="tags"><span class="tag">Falsafa</span></div>
-  </div>
-</article>
-
-<article class="card">
-  <div class="thumb">
-    <img src="./Img/afac6c12ea6428f963b9c558356ce11e.jpg" alt="">
-    <small class="muted"></small>
-  </div>
-  <div class="meta">
-    <h3>Hayot falsafasi</h3>
-    <p class="muted">S. Aliyev • 2016</p>
-    <div class="tags"><span class="tag">Falsafa</span></div>
-  </div>
-</article>
+        <div class="relative z-10 p-12 md:p-20 flex flex-col items-start max-w-2xl space-y-8">
+          <h2 class="text-5xl font-black text-white leading-tight">Ready to Invest in Your Future?</h2>
+          <p class="text-on-primary-container text-xl leading-relaxed">
+            Join 50,000+ students and researchers globally. Start with 10 free BookCoins upon registration.
+          </p>
+          <div class="flex flex-wrap gap-4">
+            <button
+              class="px-10 py-5 bg-secondary-fixed text-on-secondary-fixed rounded-full font-black text-lg hover:scale-105 active:scale-95 transition-all shadow-lg">
+              Claim Your 10 BKC
+            </button>
+            <button
+              class="px-10 py-5 border-2 border-white/20 text-white rounded-full font-black text-lg hover:bg-white/10 transition-all">
+              Institutional Access
+            </button>
+          </div>
+          <div class="pt-8 flex items-center gap-6">
+            <div class="flex -space-x-3">
+              <img class="w-10 h-10 rounded-full border-2 border-primary-container"
+                data-alt="portrait of a young student smiling"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuApgmQVCVsYD-IzVqAUPtYDUQhQzN06cFoyk61Eqj4MdUb_IqzSOUVwaT5o1oEC4ZRSK5gtmBlSz9sjiJfsiYwbhsc5VqhtgqkSp0wOol5PuETxm3ZxhQnZBDUceeFAjMV4HdHMnvXq4331mpMhy146btwYqUa_ZR2X4ymMsEPhBi5ocYq7p6xOINHf0nsLEZiqSM4QrQ7LOj-0lZGMfWSFKonP3fd1LjqyhqTQaTlMCmDGFs5C1LkUaHfn3CVwC6UZPLVFwtaVr5A" />
+              <img class="w-10 h-10 rounded-full border-2 border-primary-container"
+                data-alt="portrait of an academic professor"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuCK_aBGYOUalB2r3N9MacuV3vWu8lzpaHoEK5cSFhxID3gDJvXaF8s5ASbiIXSTVMViKTITW8A0jXH4WVWo6XHm9DuI2pWafd98bjUxs1x5IO9t9vBEXFjIcqHzo57O7SGjKp--4wUIJLJOBo7nZs_QFFT-U0244Lr9pdfQjlIN318d71y-UqqvNlATC_ktBKKMugDOE1_2YyJC-QFczEdPdqWzXzNTL-YoVUd7rUVxJ0aV5EHCoUZs5mFUuOBvQpPsdupFR1arTpM" />
+              <img class="w-10 h-10 rounded-full border-2 border-primary-container"
+                data-alt="portrait of a focused researcher"
+                src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnekQdbiEmUuoEPv4UQdMVZXElkfp4UdeD-6IpNLC7FPRsnr4uO0Tue54AO-sgr6ApJhp4VBvRLm11C-uhmrLDwPOQJNF3KYjghq5SSpBM6zUVAiVojcVg8Y91SnYo0iNIFPnONIPmD1F3ZdnCNKqjv_z-kscVn_EBL9exNHMxKuag8GlQpF1zLa9dw0p0SCpQemz-sElBtusJWmt8o9tmc8GrmJ-qSJJZry947zYT_X3CkIP1N3ePRpZ5TjrUxGbGMPV0LdaqEXc" />
+            </div>
+            <span class="text-white/60 text-sm font-medium">Join the academic community at Oxford, Stanford, and
+              MIT.</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <!-- Footer -->
+  <footer class="bg-[#f3f4f5] dark:bg-slate-950 mt-12 py-12 px-8">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-12">
+      <div class="space-y-4">
+        <div class="text-lg font-bold text-[#4B0082]">BookCoin</div>
+        <p class="text-sm font-['Inter'] text-slate-500 max-w-xs">
+          The world's first decentralized academic ledger for global knowledge exchange.
+        </p>
+      </div>
+      <div class="flex flex-wrap justify-center gap-8">
+        <a class="text-slate-400 hover:text-slate-600 transition-colors text-sm font-['Inter']" href="#">Terms of
+          Service</a>
+        <a class="text-slate-400 hover:text-slate-600 transition-colors text-sm font-['Inter']" href="#">Privacy
+          Policy</a>
+        <a class="text-slate-400 hover:text-slate-600 transition-colors text-sm font-['Inter']" href="#">Institutional
+          Access</a>
+        <a class="text-slate-400 hover:text-slate-600 transition-colors text-sm font-['Inter']" href="#">API
+          Documentation</a>
+      </div>
+      <div class="flex gap-4">
+        <span
+          class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary transition-colors">hub</span>
+        <span
+          class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary transition-colors">token</span>
+        <span
+          class="material-symbols-outlined text-slate-400 cursor-pointer hover:text-primary transition-colors">public</span>
+      </div>
+    </div>
+    <div class="max-w-7xl mx-auto mt-12 pt-8 border-t border-slate-200 dark:border-slate-800 text-center">
+      <p class="text-sm font-['Inter'] text-slate-400">© 2026 BookCoin Academic Ledger. All Rights Reserved.</p>
+    </div>
+  </footer>
 
 
+  <script>
+    const books = [{ id: 1, title: "Quantum Mechanics: The New Era", author: "Dr. Aris Thorne", genre: "Theoretical Physics", price: 85, isbn: "978-3-16-148410-0", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCuHvOnTwlsbcft1kfVppcdYstMPZEFK4Gv_uAYI2LVt8Q7RVkhJcX65EbX_pcZL7gEgi12mECVYtn6SzlQPtAnodCMsOYvzdQaMq2Rsp10d9RMfsFZEhFbH-gDgjzhPZoVlKqsmt1GQ5KF57GUXt6737bXKwAJVT-xwboLc1q_890Riv13ESxPBlcj4TVzAGkAX_AcDp5aO0a64zhpyIQmnrJBsbQNen_i-olsAyZ5UDGE9pjqO3aX7gFru3r0UOyOV6n6xXQyVPQ" }, 
+    { id: 2, title: "The Architecture of Ledgering", author: "Satoshi N.", genre: "Digital Economics", price: 120, isbn: "978-3-16-148411-7", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBNnUWEgy9Z0hikyRrRFptlQ0x1SvKQMamrPlFxhdCyavenL0lllldlxLgG2PXMTMkMd2eYXQbLHxmkbzM3Y7kSQfad79IXNR5fSv9wfyFt0JRk8uTHjhGS95nPnV2rLTnwvspiJ93awmPhSnUVlPzf4ZUHK-RCRlM3Pq0_APul1GRL_S3Mg5o1rF5tWgRyG-jnSne8lfLkoTG85sQ6z10YMV9R-ddxp38xcYc-AUDk1FlxUz_eqsqfVCfqU371mQuHqYU8VY_iOZ0" }, 
+    { id: 3, title: "Neuro-Linguistics in AI", author: "Prof. Elena Miras", genre: "Cognitive Science", price: 45, isbn: "978-3-16-148412-4", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBdamoqyXTQbWK8ZLwW7iS3xNLpwp7bjKjqA-Le7AnSbMoZKS1Ad7Et3cKCJI_WPTQsl556dMVbS5zk51Xj4tPRbpPUZXobtcKv2tb3YOgyjXHoH6uSEG6eJ7HH5-wbrCZb57oxLMY1IHtkrurgtz6JtTtDMobtUlgI1HfZqA6d-ok72amncC4Xh40nsm5II3d-2CaYnLCoVmx82yYAuLykKElhJmttpe-6BXwR7bwQ777yUqrOrPZerkxkR-jLEP12h2F-cTwvzSk" }, 
+    { id: 4, title: "The Great Academic Rebound", author: "Collection of 2024 Journals", genre: "Anthology", price: 210, isbn: "978-3-16-148413-1", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAeml7Wbbmms3fWbpcGiwpXyDRpM9MRdKXeEKB767fRBtTGOxtxyQebtQqxkaTv57l34xc8EE1LH8BBna3bavIAtePrE7N26W_a2W-5_jYZvGvtOuhoJCQT4kt9TwKpJChsRA6OBmpCzsMwFFLc5eMvj-fXUXHXZHEI_VWZ6pgDhxab8O2PDww9YLx35WhKfEDq8VykZB49ZhqNRdIVoVk3NZ2lMEc7U1CM3JBP88ONTw3KTh8rR-YIBk0r5mB6VRgvvnDbF6W5N9I" }, 
+    { id: 5, title: "Genetic Legality & Coinage", author: "Marcus Vane", genre: "Bio-Engineering", price: 65, isbn: "978-3-16-148414-8", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDbNJS3KXTQ7g_1jc8BBxQnN1qwfRhRYG7TKMdHcCvLm9Dhh86TTVGQzGE2nHmdBsuYvBw8K8cpevXkxHdvdpHaFb_hE0sl_griUjR5Jdyi-bzS6SpVibHtwHqGq7Q0Li7cVER1iWp6sHHBI0khfk-BxKlJi6Ru9t1ZP96HA0vhGZotsh2kT6zHYly4iOiGAQV3NLdrMu5vX4APrn56V_Fv5Djy9Ogm3ig2hBToVxEuAhnpMB2DhFoTOdm5hpEAudpctciczJO719E" }, 
+    { id: 6, title: "The Digital Agora", author: "Sarah Chen, PhD", genre: "Social Sciences", price: 92, isbn: "978-3-16-148415-5", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCEPHR34ooc9BZUvb9xs86e9FmvUJPofYElbG2dt9YdnLF5471OzxePktvLKsm-RcBTswmrXI7mHWVlupLjl6Q5CZx4Ox5pcBDcqzh8dWdpFpD0x2mYXnA_O44Jh_BaCm62M5_8chHYUIOeUELQHQGlBJdhufb7WDLzoi9k1F_RvAVEKH_9DVkNNobOHwkfNiZ0OZISLAyOtVEzfweZGUv6I-eNxyaoippdifNRCQIo-Shn57nXR3Km_5e8DATc0ZiRwxCimDlm5Wg" }, 
+    { id: 7, title: "Advanced Algorithms", author: "Prof. Helena Vance", genre: "Computer Science", price: 125, isbn: "978-3-16-148416-2", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAe9XdXwlFt50sLhaxWXr16Qwl6F6RiOR-nIZiS48teBKTPE33esT5xkZOHJbqNWd-eJ-inMsQjKs8qFUDKM4wj-pxymGZoWTv-PF37a8rb0yZghlvu3x0JQRAof1dEpW_qwaHa1N1epLlF28hPrOJnkkJpALv9pyLQlnMHBUoFfHMzFIyGZFUPF-OEuynBoX-gU788yoOVejJ_0LPti8sV5_-v65nvdH-LLIik7R33JrendMYg_LNQNIMHi0C5rYeHL_Ok6LIM0P4" }, 
+    { id: 8, title: "Urban Bio-Systems", author: "Dr. Marcus Thorne", genre: "Urban Planning", price: 82, isbn: "978-3-16-148417-9", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDnTwB4Z4gbug5Ff55p0YEUmrFqtaVA3hPjhnQftJ2XBCOjjXfPOf02xi6HSYjPHtJGq6ZygPrDYHKwpxE-GCeZrLgWRCH3jwUuAguu5EpLq8aXs-OVkIQ2axIKIlcvvfvwAot9Z-5nN-TTUe5A988kHKVseCVyGtHPUZVNd6xEEmu8HVGQiyeAztqHiYZ4ENWMUAzX35F10aZnKvi-6i_Xry3FDewmdHBvpqhJ6Mln7zz5VUxBA3iX_cU75ysDIcMxL94OuSnx6bM" }, 
+    { id: 9, title: "AI & Human Ethics", author: "Sarah Jenkins, PhD", genre: "Ethics", price: 150, isbn: "978-3-16-148418-6", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDimv-UuliY_3CbM8etK-g9re7Cz15gm3mDenjeHEkN9JlLu1dbLuZaxdpMOx1roX58RV5KP5qoHXrzHnTfG3XP_ubfD6NZQAfP3oyXCNP74WYScszCbXhdg2cWvDa3VU4qewM-JSpHc0pTOjPa9Cs4mZpVR60bGkuaw_ICo1WndotbVUQJwfPbg89wm4heafP-lVjzPkdmzfzO-lT-IgwVbqM9rE6bwDV03dPBvyrRKptNM751mdneQuQRKLfhZzcI-XAT1H2WQjo" }, 
+    { id: 10, title: "Genomic Structures", author: "The Research Institute", genre: "Genetics", price: 224, isbn: "978-3-16-148419-3", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAR8mDkF16v9T3fR6kymHtdwiPN-J8t35m0iPus08i__vHrUNqIYfZBrS2zuNMBi6xx_Z3L2JW7DIeb9fUnc4cISy9N7xINh1vFAqIkJ0wAhC0fCO1SUqQSTOi5E12byAUv6oYFSVwrgnlCDaZOeB1QfB6Ly6wTYXtNXt9WL-prtFGJBB0bjtXNmElHawrfwEXxroS9AhU7ygqygFu8tAshHzgz9WN2QatA9jR2-7thnGmAUJ2LdItJ8-K-HGY0iG2-c9EViAfEKF0" }, 
+    { id: 11, title: "Blockchain Law", author: "Prof. Michael Roberts", genre: "Law", price: 95, isbn: "978-3-16-148420-9", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBjHlWv2aKEtgMZpsUvxws9kj7JX-xYJZI0Qcc7-E2C_uSQgzpV4CNfhNdrq30-macExOB8djV1N3b5fgcWnAlDXb7Tx7dcvFTWiNgZvKOEx3awRe1ASXUysDZcFHaY0KLglpOO2aqp1Ra0nNrgvFxTJTdhKOc-JqQY8ByMdVZmuOvTQAHiENVZHxx77h03oErGTOwGV-rp8ElKmSDWiejUlJ7cXKcQ1tDTsx69xzO6LS-y31cJQc4ZBhJt4yWm7XjD5fFXK5N_A50" }, 
+    { id: 12, title: "Neurobiology Fundamentals", author: "Dr. Emma Watson", genre: "Biology", price: 175, isbn: "978-3-16-148421-6", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBz_GKGi4FkiIfTGjVyoOvDievwkcrO9Lg2UAbY8_K_bJBaRoY3KWN9UqQAOqDYHc1q0Cr1t4CyeFzua5W2mw1FPPVJ-ayM5mtETaFpjqjww81aBoldUEaAwv4cmXhPj-tjreooBdJ_sCnQyEpNeYtkgxnrELGdDmUT0pt6QYz-1AVRrHyrYXDd_huUVawzAlMRstXAJSCLGJeghC2mxQ0cGb6U4Pa-nrsk4gqMZcuNn95LhE455ZzF7XhAMp0AjWcrbobvGUyUxyc" },];
 
-        <!-- More sample cards (repeat to showcase layout) -->
-        
-      </section>
+    // ================= SEARCH (startsWith qo‘shildi) =================
+    function searchBooks(query) {
+      if (!query || query.trim() === "") return [];
 
-      <footer>
-        <div>© 2025 PDP Universiteti • Inspiratsiya: openlibrary.org & unilibrary.uz</div>
-      </footer>
-    </main>
-  </div>
+      const lowerQuery = query.toLowerCase().trim();
 
+      return books
+        .map(book => {
+          let score = 0;
 
+          const title = book.title.toLowerCase();
+          const author = book.author.toLowerCase();
+          const genre = book.genre.toLowerCase();
 
-  <script src="{%static 'js/main.js'%}?v=3"></script>
+          // 🔥 STARTS WITH PRIORITY (eng kuchli match)
+          if (title.startsWith(lowerQuery)) score += 100;
+          if (author.startsWith(lowerQuery)) score += 90;
+          if (genre.startsWith(lowerQuery)) score += 80;
+
+          // normal includes (zaifroq match)
+          if (title.includes(lowerQuery)) score += 30;
+          if (author.includes(lowerQuery)) score += 25;
+          if (genre.includes(lowerQuery)) score += 20;
+          if (book.isbn.includes(lowerQuery)) score += 10;
+
+          return { ...book, score };
+        })
+        .filter(book => book.score > 0)
+        .sort((a, b) => b.score - a.score); // eng yaxshi natija tepada
+    }
+
+    // ================= DISPLAY =================
+    function displaySearchResults(results, containerId) {
+      const container = document.getElementById(containerId);
+      if (!container) return;
+
+      if (!results.length) {
+        container.innerHTML = `<p class="text-slate-500 p-4 text-center">No results found.</p>`;
+        container.classList.remove("hidden");
+        return;
+      }
+
+      container.innerHTML = results.map(book => `
+        <div class="p-4 border-b hover:bg-purple-50 flex items-center gap-4 cursor-pointer"
+             onclick="alert('${book.title}')">
+            <div class="w-16 h-20 bg-slate-200 rounded overflow-hidden">
+                <img src="${book.image}" class="w-full h-full object-cover">
+            </div>
+            <div class="flex-1">
+                <h3 class="font-bold text-purple-900">${book.title}</h3>
+                <p class="text-sm text-purple-600">${book.author}</p>
+                <p class="text-xs text-slate-500">${book.genre}</p>
+            </div>
+            <div class="text-right">
+                <span class="font-bold text-yellow-600">${book.price} BKC</span>
+            </div>
+        </div>
+    `).join("");
+
+      container.classList.remove("hidden");
+    }
+
+    // ================= INIT =================
+    function initSearch(inputId, containerId) {
+      const input = document.getElementById(inputId);
+      if (!input) return;
+
+      const run = () => {
+        const results = searchBooks(input.value);
+        displaySearchResults(results, containerId);
+      };
+
+      input.addEventListener("input", run);
+      input.addEventListener("keydown", e => {
+        if (e.key === "Enter") run();
+      });
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      initSearch("search-input", "search-results");
+    });
+  </script>
 </body>
 
 </html>
