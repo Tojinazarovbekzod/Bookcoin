@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import login, signup, main, api_login, api_signup, home_page, catalog, contact_view, bookDetail, studentDashboard, settings_page, marketPlace, myBook, store, support, credits
+from .views import login, signup, main, api_login, api_signup, home_page, catalog, contact_view, bookDetail, studentDashboard, settings_page, marketPlace, myBook, store, support
 
 app_name = "blog"
 
@@ -19,7 +19,6 @@ urlpatterns = [
     path("myBook/", myBook, name="myBook"),
     path("store/", store, name="store"),
     path("support/", support, name="support"),
-    path("credits/", credits, name="credits")
 ]
 
 

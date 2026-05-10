@@ -49,7 +49,7 @@ def contact_view(request):
             subject=f"New message from {name}",
             message=f"From: {email}\n\nMessage:\n{message}",
             from_email=email,
-            recipient_list=['yourgmail@gmail.com'],
+            recipient_list=['bekzodtojinazar@gmail.com'],
             fail_silently=False,
         )
 
