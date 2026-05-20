@@ -1,0 +1,168 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>BookCoin | Purchase History</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    h1,h2,h3 { font-family: 'Space Grotesk', sans-serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .row-anim { animation: fadeUp 0.3s ease both; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    {% for i in "123456789" %}.row-anim:nth-child({{ forloop.counter }}) { animation-delay: {{ forloop.counter0 }}0ms; }
+    {% endfor %}
+  </style>
+  <link rel="stylesheet" href="{% static 'css/dark.css' %}">
+  <script>if(localStorage.getItem('darkMode')==='true')document.documentElement.classList.add('dark');</script>
+</head>
+
+<body class="bg-[#f3f4f8] min-h-screen">
+
+  <!-- TOP NAV -->
+  <nav class="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between sticky top-0 z-40 shadow-sm">
+    <div class="flex items-center gap-3">
+      <a href="{% url 'blog:studentDashboard' %}"
+        class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-100 transition">
+        <span class="material-symbols-outlined text-gray-500 text-xl">arrow_back</span>
+      </a>
+      <div>
+        <h1 class="text-lg font-bold text-[#2e0052]">Purchase History</h1>
+        <p class="text-xs text-gray-400">{{ history|length }} transaction{{ history|length|pluralize }}</p>
+      </div>
+    </div>
+    {% if user %}
+    <div class="flex items-center gap-3">
+      <a href="{% url 'blog:marketPlace' %}"
+        class="text-sm bg-[#2e0052] text-white px-4 py-2 rounded-full font-semibold hover:bg-[#4b0082] transition hidden sm:block">
+        Go to Marketplace
+      </a>
+      <div class="w-9 h-9 rounded-full bg-[#4B0082] flex items-center justify-center text-white text-sm font-bold uppercase">
+        {{ user.username|first }}
+      </div>
+    </div>
+    {% endif %}
+  </nav>
+
+  <div class="max-w-4xl mx-auto px-4 py-8">
+
+    {% if history %}
+
+    <!-- STATS ROW -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
+
+      <div class="bg-gradient-to-br from-[#2e0052] to-[#6d28d9] rounded-2xl p-5 text-white shadow-lg">
+        <p class="text-white/60 text-xs font-medium mb-1">Total Spent</p>
+        <p class="text-3xl font-black tracking-tight">{{ history|length }}</p>
+        <p class="text-white/50 text-xs mt-1">All time</p>
+      </div>
+
+      <div class="bg-white rounded-2xl p-5 shadow-sm">
+        <p class="text-gray-400 text-xs font-medium mb-1">Books Bought</p>
+        <p class="text-3xl font-black text-[#2e0052]">{{ history|length }}</p>
+        <p class="text-gray-400 text-xs mt-1">Total purchases</p>
+      </div>
+
+      <div class="bg-white rounded-2xl p-5 shadow-sm col-span-2 sm:col-span-1">
+        <p class="text-gray-400 text-xs font-medium mb-1">Latest Purchase</p>
+        <p class="text-sm font-bold text-[#2e0052] line-clamp-2">{{ history.0.book_title }}</p>
+        <p class="text-gray-400 text-xs mt-1">{{ history.0.purchased_at|date:"M d, Y" }}</p>
+      </div>
+
+    </div>
+
+    <!-- TABLE HEADER -->
+    <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+      <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+        <h2 class="font-bold text-[#2e0052]">All Transactions</h2>
+        <span class="text-xs text-gray-400">Sorted by latest</span>
+      </div>
+
+      <!-- Desktop Header -->
+      <div class="hidden md:grid grid-cols-12 px-6 py-3 bg-gray-50 text-xs font-bold text-gray-400 uppercase tracking-widest">
+        <div class="col-span-1">#</div>
+        <div class="col-span-4">Book</div>
+        <div class="col-span-2">Author</div>
+        <div class="col-span-2">Genre</div>
+        <div class="col-span-2">Date</div>
+      </div>
+
+      <!-- ROWS -->
+      <div class="divide-y divide-gray-50">
+        {% for item in history %}
+        <div class="row-anim px-6 py-4 hover:bg-purple-50/40 transition-colors group">
+
+          <!-- Mobile layout -->
+          <div class="flex items-center gap-4 md:hidden">
+            <div class="w-10 h-10 bg-purple-100 rounded-xl flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-purple-600 text-lg">book</span>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-bold text-gray-900 text-sm truncate">{{ item.book_title }}</p>
+              <p class="text-xs text-gray-400">{{ item.book_author }} · {{ item.purchased_at|date:"M d, Y" }}</p>
+            </div>
+          </div>
+
+          <!-- Desktop layout -->
+          <div class="hidden md:grid grid-cols-12 items-center">
+            <div class="col-span-1 text-gray-300 text-sm font-bold">{{ forloop.counter }}</div>
+
+            <div class="col-span-4 flex items-center gap-3">
+              <div class="w-9 h-9 bg-purple-100 group-hover:bg-[#2e0052] rounded-xl flex items-center justify-center shrink-0 transition-colors">
+                <span class="material-symbols-outlined text-purple-600 group-hover:text-white text-base transition-colors">book</span>
+              </div>
+              <span class="font-semibold text-gray-900 text-sm truncate">{{ item.book_title }}</span>
+            </div>
+
+            <div class="col-span-2 text-sm text-gray-500 truncate">{{ item.book_author|default:"—" }}</div>
+
+            <div class="col-span-2">
+              <span class="text-xs font-semibold px-2 py-1 bg-purple-100 text-purple-700 rounded-full">
+                {{ item.book_genre|default:"General" }}
+              </span>
+            </div>
+
+            <div class="col-span-2 text-sm text-gray-400">{{ item.purchased_at|date:"M d, Y" }}</div>
+
+          </div>
+
+        </div>
+        {% endfor %}
+      </div>
+
+      <!-- FOOTER TOTAL -->
+      <div class="px-6 py-4 bg-gradient-to-r from-[#2e0052]/5 to-transparent border-t border-gray-100 flex justify-between items-center">
+        <span class="text-sm font-semibold text-gray-500">{{ history|length }} transactions total</span>
+      </div>
+    </div>
+
+    {% else %}
+
+    <!-- EMPTY STATE -->
+    <div class="flex flex-col items-center justify-center py-32 text-center">
+      <div class="w-28 h-28 bg-purple-100 rounded-full flex items-center justify-center mb-6 shadow-inner">
+        <span class="material-symbols-outlined text-6xl text-purple-300">receipt_long</span>
+      </div>
+      <h2 class="text-2xl font-bold text-gray-800 mb-2">No purchases yet</h2>
+      <p class="text-gray-400 text-sm max-w-xs mb-8">
+        Your purchase history will appear here after you bron a book from the marketplace.
+      </p>
+      <a href="{% url 'blog:marketPlace' %}"
+        class="px-8 py-3 bg-[#2e0052] text-white rounded-full font-bold text-sm hover:bg-[#4b0082] transition shadow-lg">
+        Browse Marketplace
+      </a>
+    </div>
+
+    {% endif %}
+
+  </div>
+
+</body>
+</html>

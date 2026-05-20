@@ -17,11 +17,14 @@ window.addEventListener("load", function () {
     document.getElementById("registerForm").addEventListener("submit", async function (e) {
         e.preventDefault();
 
+        const remember = document.getElementById("remember").checked;
+
         const data = {
             username: document.getElementById("username").value,
             surname: document.getElementById("surname").value,
             email: document.getElementById("email").value,
-            password: document.getElementById("password").value
+            password: document.getElementById("password").value,
+            remember: remember
         };
 
         try {
@@ -34,8 +37,11 @@ window.addEventListener("load", function () {
             const result = await response.json();
 
             if (result.success) {
-                alert("✅Ro'yxatdan o'tish muvaffaqiyatli!");
-                window.location.href = "/login/";
+                if (remember) {
+                    window.location.href = "/studentDashboard/";
+                } else {
+                    window.location.href = "/login/";
+                }
             } else {
                 alert("❌Xatolik: " + (result.error || "Notog'ri ma'lumot"));
             }

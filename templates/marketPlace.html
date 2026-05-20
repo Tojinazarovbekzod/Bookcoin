@@ -1,86 +1,395 @@
-{% load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>BookCoin | Marketplace</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <script src="{% static 'js/i18n.js' %}"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    h1,h2,h3 { font-family: 'Space Grotesk', sans-serif; }
+    .card-img { background: linear-gradient(135deg, #2e0052, #4b0082); }
+  </style>
+  <link rel="stylesheet" href="{% static 'css/dark.css' %}">
+  <script>if(localStorage.getItem('darkMode')==='true')document.documentElement.classList.add('dark');</script>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-50 min-h-screen">
 
   <!-- HEADER -->
-  <header class="bg-black text-white flex justify-between items-center p-4 text-2xl font-bold">
-
-    <div>
-      📚 Book Marketplace
+  <header class="bg-[#2e0052] text-white px-6 py-4 flex flex-wrap items-center justify-between gap-4 shadow-lg">
+    <div class="flex items-center gap-3">
+      <a href="{% url 'blog:studentDashboard' %}" class="text-white/60 hover:text-white text-sm">← Dashboard</a>
+      <span class="text-white/30">|</span>
+      <h1 class="text-xl font-bold">📚 BookCoin Marketplace</h1>
     </div>
-
-    <a href="{% url 'blog:myBook' %}"
-      class="text-sm bg-white text-black px-4 py-2 rounded-lg hover:bg-gray-200 transition">
-      My Book 📖
+    <a href="{% url 'blog:myBook' %}" class="text-sm bg-yellow-400 text-black px-4 py-2 rounded-full font-bold hover:bg-yellow-300 transition">
+      My Books 📖
     </a>
-
   </header>
-  
-  <!-- GRID -->
-  <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-6"></div>
 
- <script src="{%static 'js/store.js'%}?v=3"></script>
+  <!-- FILTERS -->
+  <div class="sticky top-0 z-10 bg-white border-b border-gray-200 shadow-sm px-6 py-3 flex flex-wrap items-center gap-3">
+    <!-- Search -->
+    <input id="searchInput" type="text" placeholder="Search books, authors..."
+      class="border border-gray-300 rounded-full px-4 py-2 text-sm w-full sm:w-64 focus:outline-none focus:ring-2 focus:ring-purple-400"
+      oninput="filterBooks()">
 
-<script>
+    <!-- Genre filter -->
+    <select id="genreFilter" onchange="filterBooks()"
+      class="border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400">
+      <option value="">All Genres</option>
+      <option value="Computer Science">Computer Science</option>
+      <option value="Mathematics">Mathematics</option>
+      <option value="Physics">Physics</option>
+      <option value="Economics">Economics</option>
+      <option value="Biology">Biology</option>
+      <option value="Law">Law</option>
+      <option value="Psychology">Psychology</option>
+      <option value="History">History</option>
+      <option value="Philosophy">Philosophy</option>
+      <option value="Engineering">Engineering</option>
+      <option value="Chemistry">Chemistry</option>
+      <option value="Medicine">Medicine</option>
+    </select>
 
-  const allBooks = Array.from({ length: 45 }).map((_, i) => ({
-    title: "Applied Biometrics " + (i + 1),
-    author: "Dr. Viktor Gray",
-    price: (10 + i) + " BKC",
-    img: "https://picsum.photos/300/400?random=" + i
-  }));
+    <!-- Sort -->
+    <select id="sortFilter" onchange="filterBooks()"
+      class="border border-gray-300 rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-400">
+      <option value="default">Sort: Default</option>
+      <option value="price_asc">Price: Low to High</option>
+      <option value="price_desc">Price: High to Low</option>
+      <option value="rating">Top Rated</option>
+      <option value="title">A–Z</option>
+    </select>
 
-  function render() {
-    const grid = document.getElementById("grid");
-    grid.innerHTML = "";
+    <span id="countLabel" class="text-sm text-gray-500 ml-auto"></span>
+  </div>
 
-    allBooks.forEach((b, index) => {
-      const div = document.createElement("div");
-
-      div.className = `
-        bg-white rounded-2xl shadow-lg overflow-hidden 
-        hover:shadow-2xl hover:scale-[1.03] transition duration-300
-      `;
-
-      div.innerHTML = `
-        <div class="relative">
-          <img src="${b.img}" class="h-64 w-full object-cover">
-
-          <span class="absolute bottom-3 left-3 bg-yellow-400 text-black px-3 py-1 rounded-full text-sm font-bold shadow">
-            ${b.price}
+  <!-- DB BOOKS (from admin) -->
+  {% if db_books %}
+  <div class="px-6 pt-6">
+    <h2 class="text-lg font-bold text-[#2e0052] mb-4 flex items-center gap-2">
+      <span class="w-2 h-2 bg-yellow-400 rounded-full inline-block"></span>
+      New Arrivals
+    </h2>
+    <div id="dbGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 mb-8">
+      {% for book in db_books %}
+      <div class="bg-white rounded-2xl shadow hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col">
+        <div class="relative overflow-hidden h-56" style="background:linear-gradient(135deg,#2e0052,#4b0082)">
+          {% if book.cover_image %}
+          <img src="{{ book.cover_image }}" alt="{{ book.title }}"
+            class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+            onerror="this.style.display='none'">
+          {% else %}
+          <div class="w-full h-full flex items-center justify-center text-center p-4">
+            <div>
+              <div class="text-4xl mb-2">📚</div>
+              <div class="text-white text-xs font-bold leading-tight">{{ book.title }}</div>
+            </div>
+          </div>
+          {% endif %}
+          <span class="absolute top-3 left-3 text-xs font-bold px-2 py-1 rounded-full bg-yellow-100 text-yellow-700">
+            {{ book.genre }}
           </span>
+          <span class="absolute top-3 right-3 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">NEW</span>
         </div>
-
-        <div class="p-4">
-          <h2 class="font-bold text-lg text-gray-800">${b.title}</h2>
-          <p class="text-gray-500 text-sm">${b.author}</p>
-
-          <button class="mt-3 w-full bg-black text-white py-2 rounded-xl hover:bg-gray-800 transition">
-            Buy Now
+        <div class="p-4 flex flex-col flex-1">
+          <h2 class="font-bold text-gray-900 text-sm leading-tight mb-1 line-clamp-2">{{ book.title }}</h2>
+          <p class="text-gray-400 text-xs mb-2">{{ book.author }}</p>
+          <div class="flex items-center gap-1 mb-3">
+            <span class="text-yellow-400 text-xs">★★★★★</span>
+            <span class="text-gray-500 text-xs">{{ book.rating }}</span>
+          </div>
+          <button class="buy-db-btn mt-auto w-full bg-[#2e0052] hover:bg-[#4b0082] text-white text-sm font-bold py-2 rounded-xl transition"
+            data-id="{{ book.id }}"
+            data-title="{{ book.title }}"
+            data-author="{{ book.author }}"
+            data-genre="{{ book.genre }}"
+            data-price="{{ book.price }}"
+            data-rating="{{ book.rating }}"
+            data-img="{{ book.cover_image }}">
+            Bron Now
           </button>
         </div>
-      `;
+      </div>
+      {% endfor %}
+    </div>
+    <hr class="border-gray-200 mb-6">
+    <h2 class="text-lg font-bold text-[#2e0052] mb-4 flex items-center gap-2">
+      <span class="w-2 h-2 bg-purple-400 rounded-full inline-block"></span>
+      All Books
+    </h2>
+  </div>
+  {% endif %}
 
-      div.querySelector("button").addEventListener("click", () => {
-        buyBook(b);
-        window.location.href = "{%url 'blog:myBook'%}";
+  <!-- GRID -->
+  <div id="grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 p-6 pt-0"></div>
+
+  <!-- Empty state -->
+  <div id="emptyState" class="hidden text-center py-24 text-gray-400">
+    <div class="text-6xl mb-4">📭</div>
+    <p class="text-xl font-semibold">No books found</p>
+    <p class="text-sm mt-1">Try a different search or filter</p>
+  </div>
+
+  <script src="{% static 'js/store.js' %}?v=4"></script>
+
+  <script>
+    const OL = isbn => `https://covers.openlibrary.org/b/isbn/${isbn}-L.jpg`;
+
+    const BOOKS = [
+      { id:1,  title:"Introduction to Algorithms",        author:"Thomas H. Cormen",       genre:"Computer Science", price:85,  rating:4.9, img:OL("9780262033848") },
+      { id:2,  title:"Clean Code",                        author:"Robert C. Martin",        genre:"Computer Science", price:60,  rating:4.8, img:OL("9780132350884") },
+      { id:3,  title:"The Pragmatic Programmer",          author:"Andrew Hunt",             genre:"Computer Science", price:55,  rating:4.7, img:OL("9780135957059") },
+      { id:4,  title:"Design Patterns",                   author:"Gang of Four",            genre:"Computer Science", price:70,  rating:4.6, img:OL("9780201633610") },
+      { id:5,  title:"Computer Networks",                 author:"Andrew S. Tanenbaum",     genre:"Computer Science", price:90,  rating:4.5, img:OL("9780132126953") },
+      { id:6,  title:"Operating System Concepts",         author:"Abraham Silberschatz",    genre:"Computer Science", price:95,  rating:4.7, img:OL("9781119800361") },
+      { id:7,  title:"Artificial Intelligence",           author:"Stuart Russell",          genre:"Computer Science", price:110, rating:4.9, img:OL("9780136042594") },
+      { id:8,  title:"Database System Concepts",          author:"Henry F. Korth",          genre:"Computer Science", price:88,  rating:4.6, img:OL("9780078022159") },
+      { id:9,  title:"Python Crash Course",               author:"Eric Matthes",            genre:"Computer Science", price:45,  rating:4.8, img:OL("9781593279288") },
+      { id:10, title:"Deep Learning",                     author:"Ian Goodfellow",          genre:"Computer Science", price:120, rating:4.9, img:OL("9780262035613") },
+      { id:11, title:"Structure and Interpretation",      author:"Harold Abelson",          genre:"Computer Science", price:75,  rating:4.8, img:OL("9780262510875") },
+      { id:12, title:"The Art of Computer Programming",  author:"Donald E. Knuth",         genre:"Computer Science", price:200, rating:5.0, img:OL("9780201896831") },
+      { id:102,title:"Machine Learning",                  author:"Tom M. Mitchell",         genre:"Computer Science", price:95,  rating:4.8, img:OL("9780070428072") },
+      { id:103,title:"Computer Architecture",             author:"John L. Hennessy",        genre:"Computer Science", price:105, rating:4.7, img:OL("9780128119051") },
+      { id:104,title:"Compilers: Principles",             author:"Alfred V. Aho",           genre:"Computer Science", price:98,  rating:4.6, img:OL("9780321486813") },
+      { id:105,title:"Cryptography and Network Security", author:"William Stallings",       genre:"Computer Science", price:88,  rating:4.7, img:OL("9780134444284") },
+
+      { id:13, title:"Calculus: Early Transcendentals",  author:"James Stewart",           genre:"Mathematics",      price:95,  rating:4.7, img:OL("9781285741550") },
+      { id:14, title:"Linear Algebra Done Right",         author:"Sheldon Axler",           genre:"Mathematics",      price:65,  rating:4.8, img:OL("9783319110806") },
+      { id:15, title:"Introduction to Probability",       author:"Joseph K. Blitzstein",    genre:"Mathematics",      price:70,  rating:4.6, img:OL("9781466575578") },
+      { id:16, title:"Discrete Mathematics",              author:"Kenneth H. Rosen",        genre:"Mathematics",      price:85,  rating:4.5, img:OL("9780073383095") },
+      { id:17, title:"Real Analysis",                     author:"Walter Rudin",            genre:"Mathematics",      price:80,  rating:4.7, img:OL("9780070542358") },
+      { id:18, title:"Abstract Algebra",                  author:"David S. Dummit",         genre:"Mathematics",      price:90,  rating:4.6, img:OL("9780471433347") },
+      { id:19, title:"Topology",                          author:"James Munkres",           genre:"Mathematics",      price:75,  rating:4.8, img:OL("9780131816299") },
+      { id:20, title:"Number Theory",                     author:"G.H. Hardy",              genre:"Mathematics",      price:55,  rating:4.7, img:OL("9780199219865") },
+      { id:21, title:"Graph Theory",                      author:"Reinhard Diestel",        genre:"Mathematics",      price:60,  rating:4.5, img:OL("9783662536216") },
+
+      { id:22, title:"University Physics",                author:"Hugh D. Young",           genre:"Physics",          price:100, rating:4.6, img:OL("9780321696861") },
+      { id:23, title:"Quantum Mechanics",                 author:"David J. Griffiths",      genre:"Physics",          price:85,  rating:4.9, img:OL("9781107179868") },
+      { id:24, title:"Classical Mechanics",               author:"Herbert Goldstein",       genre:"Physics",          price:90,  rating:4.7, img:OL("9780201657029") },
+      { id:25, title:"Introduction to Electrodynamics",   author:"David J. Griffiths",      genre:"Physics",          price:80,  rating:4.8, img:OL("9781108420419") },
+      { id:26, title:"Statistical Mechanics",             author:"Kerson Huang",            genre:"Physics",          price:75,  rating:4.6, img:OL("9780471815181") },
+      { id:27, title:"Thermodynamics",                    author:"Enrico Fermi",            genre:"Physics",          price:60,  rating:4.7, img:OL("9780486603612") },
+      { id:28, title:"Optics",                            author:"Eugene Hecht",            genre:"Physics",          price:70,  rating:4.5, img:OL("9780133977226") },
+      { id:29, title:"Nuclear Physics",                   author:"Kenneth Krane",           genre:"Physics",          price:85,  rating:4.6, img:OL("9780471805533") },
+      { id:30, title:"Relativity: Special and General",   author:"Albert Einstein",         genre:"Physics",          price:50,  rating:5.0, img:OL("9780486600819") },
+
+      { id:31, title:"Principles of Economics",           author:"N. Gregory Mankiw",       genre:"Economics",        price:95,  rating:4.7, img:OL("9781305585126") },
+      { id:32, title:"The Wealth of Nations",             author:"Adam Smith",              genre:"Economics",        price:45,  rating:4.8, img:OL("9780140432084") },
+      { id:33, title:"Freakonomics",                      author:"Steven D. Levitt",        genre:"Economics",        price:40,  rating:4.6, img:OL("9780060731335") },
+      { id:34, title:"Microeconomics",                    author:"Robert Pindyck",          genre:"Economics",        price:90,  rating:4.5, img:OL("9780134184241") },
+      { id:35, title:"Macroeconomics",                    author:"Olivier Blanchard",       genre:"Economics",        price:92,  rating:4.6, img:OL("9780133485615") },
+      { id:36, title:"Capital in the 21st Century",       author:"Thomas Piketty",          genre:"Economics",        price:55,  rating:4.7, img:OL("9780674430006") },
+      { id:37, title:"Misbehaving",                       author:"Richard Thaler",          genre:"Economics",        price:50,  rating:4.8, img:OL("9780393352795") },
+      { id:38, title:"Game Theory",                       author:"Drew Fudenberg",          genre:"Economics",        price:80,  rating:4.6, img:OL("9780262061414") },
+      { id:39, title:"International Economics",           author:"Paul Krugman",            genre:"Economics",        price:88,  rating:4.5, img:OL("9780133423648") },
+
+      { id:40, title:"Campbell Biology",                  author:"Jane B. Reece",           genre:"Biology",          price:110, rating:4.8, img:OL("9780134093413") },
+      { id:41, title:"Molecular Biology of the Cell",     author:"Bruce Alberts",           genre:"Biology",          price:120, rating:4.9, img:OL("9780393884821") },
+      { id:42, title:"Biochemistry",                      author:"Jeremy M. Berg",          genre:"Biology",          price:105, rating:4.7, img:OL("9781319114657") },
+      { id:43, title:"Genetics: From Genes to Genomes",   author:"Leland Hartwell",         genre:"Biology",          price:95,  rating:4.6, img:OL("9780073525266") },
+      { id:44, title:"Ecology",                           author:"William D. Bowman",       genre:"Biology",          price:85,  rating:4.5, img:OL("9781605352534") },
+      { id:45, title:"Human Anatomy & Physiology",        author:"Elaine N. Marieb",        genre:"Biology",          price:100, rating:4.7, img:OL("9780134580999") },
+      { id:46, title:"Evolutionary Biology",              author:"Douglas J. Futuyma",      genre:"Biology",          price:90,  rating:4.6, img:OL("9780878931873") },
+      { id:47, title:"Neuroscience",                      author:"Dale Purves",             genre:"Biology",          price:115, rating:4.8, img:OL("9781605353807") },
+
+      { id:48, title:"Black's Law Dictionary",            author:"Bryan A. Garner",         genre:"Law",              price:75,  rating:4.7, img:OL("9780314619600") },
+      { id:49, title:"Constitutional Law",                author:"Erwin Chemerinsky",       genre:"Law",              price:95,  rating:4.6, img:OL("9781454882664") },
+      { id:50, title:"International Law",                 author:"Malcolm Shaw",            genre:"Law",              price:90,  rating:4.5, img:OL("9781107429642") },
+      { id:51, title:"Criminal Law",                      author:"Joshua Dressler",         genre:"Law",              price:80,  rating:4.6, img:OL("9781628101263") },
+      { id:52, title:"Contract Law",                      author:"E. Allan Farnsworth",     genre:"Law",              price:85,  rating:4.7, img:OL("9780735589902") },
+      { id:53, title:"Intellectual Property Law",         author:"Roger E. Schechter",      genre:"Law",              price:88,  rating:4.5, img:OL("9780314196019") },
+      { id:54, title:"Corporate Law",                     author:"William A. Klein",        genre:"Law",              price:92,  rating:4.6, img:OL("9780735511286") },
+      { id:55, title:"Blockchain & Law",                  author:"Primavera De Filippi",    genre:"Law",              price:65,  rating:4.8, img:OL("9780674976429") },
+
+      { id:56, title:"Psychology: The Science of Mind",   author:"Robert A. Baron",         genre:"Psychology",       price:80,  rating:4.6, img:OL("9780205205585") },
+      { id:57, title:"Thinking, Fast and Slow",           author:"Daniel Kahneman",         genre:"Psychology",       price:45,  rating:4.9, img:OL("9780374533557") },
+      { id:58, title:"Influence",                         author:"Robert B. Cialdini",      genre:"Psychology",       price:40,  rating:4.8, img:OL("9780062937650") },
+      { id:59, title:"Cognitive Psychology",              author:"Robert J. Sternberg",     genre:"Psychology",       price:85,  rating:4.5, img:OL("9781133313915") },
+      { id:60, title:"Social Psychology",                 author:"David G. Myers",          genre:"Psychology",       price:88,  rating:4.6, img:OL("9781259870323") },
+      { id:61, title:"Abnormal Psychology",               author:"Ronald J. Comer",         genre:"Psychology",       price:90,  rating:4.5, img:OL("9781429219358") },
+      { id:62, title:"Developmental Psychology",          author:"David Shaffer",           genre:"Psychology",       price:82,  rating:4.6, img:OL("9781111344207") },
+      { id:63, title:"Neuropsychology",                   author:"Bryan Kolb",              genre:"Psychology",       price:95,  rating:4.7, img:OL("9780716717843") },
+
+      { id:64, title:"A Brief History of Time",           author:"Stephen Hawking",         genre:"History",          price:35,  rating:4.9, img:OL("9780553380163") },
+      { id:65, title:"Sapiens",                           author:"Yuval Noah Harari",       genre:"History",          price:40,  rating:4.9, img:OL("9780062316097") },
+      { id:66, title:"Guns, Germs and Steel",             author:"Jared Diamond",           genre:"History",          price:38,  rating:4.7, img:OL("9780393317558") },
+      { id:67, title:"History of the Ancient World",      author:"Susan Wise Bauer",        genre:"History",          price:50,  rating:4.6, img:OL("9780393059748") },
+      { id:68, title:"World History",                     author:"William J. Duiker",       genre:"History",          price:88,  rating:4.5, img:OL("9781285445236") },
+      { id:69, title:"The Rise and Fall of Rome",         author:"Mike Duncan",             genre:"History",          price:42,  rating:4.8, img:OL("9781610393584") },
+      { id:70, title:"Medieval Europe",                   author:"Chris Wickham",           genre:"History",          price:48,  rating:4.6, img:OL("9780300208085") },
+      { id:71, title:"Modern Times",                      author:"Paul Johnson",            genre:"History",          price:55,  rating:4.5, img:OL("9780060935504") },
+
+      { id:72, title:"Sophie's World",                    author:"Jostein Gaarder",         genre:"Philosophy",       price:30,  rating:4.7, img:OL("9780374530716") },
+      { id:73, title:"The Republic",                      author:"Plato",                   genre:"Philosophy",       price:25,  rating:4.8, img:OL("9780872201361") },
+      { id:74, title:"Nicomachean Ethics",                author:"Aristotle",               genre:"Philosophy",       price:28,  rating:4.7, img:OL("9780872204645") },
+      { id:75, title:"Critique of Pure Reason",           author:"Immanuel Kant",           genre:"Philosophy",       price:35,  rating:4.6, img:OL("9780521657297") },
+      { id:76, title:"Being and Time",                    author:"Martin Heidegger",        genre:"Philosophy",       price:40,  rating:4.5, img:OL("9780061575594") },
+      { id:77, title:"Meditations",                       author:"Marcus Aurelius",         genre:"Philosophy",       price:22,  rating:4.9, img:OL("9780140449334") },
+      { id:78, title:"Thus Spoke Zarathustra",            author:"Friedrich Nietzsche",     genre:"Philosophy",       price:28,  rating:4.7, img:OL("9780140441185") },
+      { id:79, title:"The Problems of Philosophy",        author:"Bertrand Russell",        genre:"Philosophy",       price:25,  rating:4.6, img:OL("9780195002393") },
+
+      { id:80, title:"Engineering Mechanics",             author:"R.C. Hibbeler",           genre:"Engineering",      price:105, rating:4.6, img:OL("9780133915426") },
+      { id:81, title:"Fundamentals of Electric Circuits", author:"Charles K. Alexander",    genre:"Engineering",      price:98,  rating:4.7, img:OL("9780078028229") },
+      { id:82, title:"Fluid Mechanics",                   author:"Frank M. White",          genre:"Engineering",      price:100, rating:4.5, img:OL("9780073398273") },
+      { id:83, title:"Materials Science",                 author:"William D. Callister",    genre:"Engineering",      price:95,  rating:4.6, img:OL("9781118319222") },
+      { id:84, title:"Control Systems Engineering",       author:"Norman S. Nise",          genre:"Engineering",      price:90,  rating:4.7, img:OL("9781118170519") },
+      { id:85, title:"Signals and Systems",               author:"Alan V. Oppenheim",       genre:"Engineering",      price:88,  rating:4.6, img:OL("9780138147570") },
+      { id:86, title:"Structural Analysis",               author:"Russell C. Hibbeler",     genre:"Engineering",      price:92,  rating:4.5, img:OL("9780134610672") },
+      { id:87, title:"Robotics: Modelling & Control",     author:"Bruno Siciliano",         genre:"Engineering",      price:110, rating:4.8, img:OL("9781846286414") },
+
+      { id:88, title:"Organic Chemistry",                 author:"Paula Y. Bruice",         genre:"Chemistry",        price:105, rating:4.6, img:OL("9780321803221") },
+      { id:89, title:"Physical Chemistry",                author:"Peter Atkins",            genre:"Chemistry",        price:110, rating:4.7, img:OL("9780198769866") },
+      { id:90, title:"Inorganic Chemistry",               author:"Gary L. Miessler",        genre:"Chemistry",        price:95,  rating:4.5, img:OL("9780321811059") },
+      { id:91, title:"Analytical Chemistry",              author:"Gary D. Christian",       genre:"Chemistry",        price:90,  rating:4.6, img:OL("9780470887578") },
+      { id:92, title:"Green Chemistry",                   author:"Paul Anastas",            genre:"Chemistry",        price:70,  rating:4.7, img:OL("9780198506980") },
+
+      { id:93, title:"Harrison's Principles of Medicine", author:"Dennis L. Kasper",        genre:"Medicine",         price:180, rating:4.9, img:OL("9781259644030") },
+      { id:94, title:"Gray's Anatomy",                    author:"Henry Gray",              genre:"Medicine",         price:150, rating:4.9, img:OL("9780702052309") },
+      { id:95, title:"Robbins Pathology",                 author:"Vinay Kumar",             genre:"Medicine",         price:140, rating:4.8, img:OL("9780323531139") },
+      { id:96, title:"Pharmacology",                      author:"Bertram G. Katzung",      genre:"Medicine",         price:130, rating:4.7, img:OL("9781259252662") },
+      { id:97, title:"Medical Physiology",                author:"Walter F. Boron",         genre:"Medicine",         price:135, rating:4.8, img:OL("9781455743773") },
+      { id:98, title:"Clinical Microbiology",             author:"Patrick R. Murray",       genre:"Medicine",         price:120, rating:4.6, img:OL("9780323299565") },
+      { id:99, title:"Essentials of Immunology",          author:"Ivan Roitt",              genre:"Medicine",         price:115, rating:4.7, img:OL("9781405196833") },
+      { id:100,title:"Medical Biochemistry",              author:"John W. Baynes",          genre:"Medicine",         price:125, rating:4.6, img:OL("9780323529563") },
+      { id:101,title:"Netter's Atlas of Human Anatomy",   author:"Frank H. Netter",         genre:"Medicine",         price:160, rating:4.9, img:OL("9780323393225") },
+    ];
+
+    const genreColors = {
+      "Computer Science": "bg-blue-100 text-blue-700",
+      "Mathematics":      "bg-purple-100 text-purple-700",
+      "Physics":          "bg-indigo-100 text-indigo-700",
+      "Economics":        "bg-yellow-100 text-yellow-700",
+      "Biology":          "bg-green-100 text-green-700",
+      "Law":              "bg-red-100 text-red-700",
+      "Psychology":       "bg-pink-100 text-pink-700",
+      "History":          "bg-orange-100 text-orange-700",
+      "Philosophy":       "bg-teal-100 text-teal-700",
+      "Engineering":      "bg-gray-100 text-gray-700",
+      "Chemistry":        "bg-lime-100 text-lime-700",
+      "Medicine":         "bg-rose-100 text-rose-700",
+    };
+
+    function stars(rating) {
+      const full = Math.floor(rating);
+      const half = rating % 1 >= 0.5 ? 1 : 0;
+      return '★'.repeat(full) + (half ? '½' : '') + '☆'.repeat(5 - full - half);
+    }
+
+    function renderCards(books) {
+      const grid = document.getElementById("grid");
+      const empty = document.getElementById("emptyState");
+      const count = document.getElementById("countLabel");
+      grid.innerHTML = "";
+
+      count.textContent = books.length + " books";
+
+      if (!books.length) {
+        empty.classList.remove("hidden");
+        return;
+      }
+      empty.classList.add("hidden");
+
+      books.forEach(b => {
+        const badgeClass = genreColors[b.genre] || "bg-gray-100 text-gray-600";
+        const card = document.createElement("div");
+        card.className = "bg-white rounded-2xl shadow hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col";
+        card.innerHTML = `
+          <div class="relative overflow-hidden h-56">
+            <img src="${b.img}" alt="${b.title}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+              onerror="this.style.display='none';this.parentElement.querySelector('.placeholder').style.display='flex'">
+            <div class="placeholder w-full h-full items-center justify-center text-center p-4" style="display:none;background:linear-gradient(135deg,#2e0052,#4b0082)">
+              <div>
+                <div class="text-4xl mb-2">📚</div>
+                <div class="text-white text-xs font-bold leading-tight">${b.title}</div>
+              </div>
+            </div>
+            <span class="absolute top-3 left-3 text-xs font-bold px-2 py-1 rounded-full ${badgeClass}">
+              ${b.genre}
+            </span>
+          </div>
+          <div class="p-4 flex flex-col flex-1">
+            <h2 class="font-bold text-gray-900 text-sm leading-tight mb-1 line-clamp-2">${b.title}</h2>
+            <p class="text-gray-400 text-xs mb-2">${b.author}</p>
+            <div class="flex items-center gap-1 mb-3">
+              <span class="text-yellow-400 text-xs">${stars(b.rating)}</span>
+              <span class="text-gray-500 text-xs">${b.rating}</span>
+            </div>
+            <button onclick="handleBuy(${b.id})"
+              class="mt-auto w-full bg-[#2e0052] hover:bg-[#4b0082] text-white text-sm font-bold py-2 rounded-xl transition">
+              Bron Now
+            </button>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function filterBooks() {
+      const q = document.getElementById("searchInput").value.toLowerCase().trim();
+      const genre = document.getElementById("genreFilter").value;
+      const sort = document.getElementById("sortFilter").value;
+
+      let result = BOOKS.filter(b => {
+        const matchQ = !q || b.title.toLowerCase().includes(q) || b.author.toLowerCase().includes(q);
+        const matchG = !genre || b.genre === genre;
+        return matchQ && matchG;
       });
 
-      grid.appendChild(div);
+      if (sort === "price_asc")  result.sort((a,b) => a.price - b.price);
+      if (sort === "price_desc") result.sort((a,b) => b.price - a.price);
+      if (sort === "rating")     result.sort((a,b) => b.rating - a.rating);
+      if (sort === "title")      result.sort((a,b) => a.title.localeCompare(b.title));
+
+      renderCards(result);
+    }
+
+    async function saveToHistory(book) {
+      try {
+        await fetch("{% url 'blog:api_buy' %}", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "X-CSRFToken": "{{ csrf_token }}" },
+          body: JSON.stringify(book)
+        });
+      } catch(e) {}
+    }
+
+    async function handleBuy(id) {
+      const book = BOOKS.find(b => b.id === id);
+      if (book) {
+        window.buyBook(book);
+        await saveToHistory(book);
+      }
+      window.location.href = "{% url 'blog:myBook' %}";
+    }
+
+    // Initial render
+    filterBooks();
+
+    // DB books buy buttons
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.buy-db-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          const book = {
+            id:     'db-' + btn.dataset.id,
+            title:  btn.dataset.title,
+            author: btn.dataset.author,
+            genre:  btn.dataset.genre,
+            price:  parseInt(btn.dataset.price),
+            rating: parseFloat(btn.dataset.rating),
+            img:    btn.dataset.img,
+          };
+          window.buyBook(book);
+          await saveToHistory(book);
+          window.location.href = "{% url 'blog:myBook' %}";
+        });
+      });
     });
-  }
-
-  render();
-</script>
+  </script>
 </body>
-
 </html>

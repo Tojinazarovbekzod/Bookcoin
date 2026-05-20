@@ -12,6 +12,8 @@
   <link rel="icon" href="{% static 'images/bookLogotip.jpg'%}">
   <link rel="stylesheet" href="{%static 'css/account.css'%}?v=2">
   <title>createAccount</title>
+  <link rel="stylesheet" href="{% static 'css/dark.css' %}">
+  <script>if(localStorage.getItem('darkMode')==='true')document.documentElement.classList.add('dark');</script>
 </head>
 
 <body>
@@ -25,28 +27,28 @@
 
     </div>
 
-    <h1 id="signin-title">Ro'yhatdan o'tish</h1>
-    <p class="lead">Iltimos malumotlaringizni kiriting</p>
+    <h1 id="signin-title" data-i18n="signup_title">Sign Up</h1>
+    <p class="lead" data-i18n="signup_subtitle">Please enter your information</p>
 
     <form method="post" action="{% url 'blog:signup'%}" id="registerForm" class="form">
       {% csrf_token %}
       <br>
       <div>
-        <label for="username">Username</label>
+        <label for="username" data-i18n="label_username">Username</label>
         <input id="username" name="username" type="text" placeholder="Ismingizni kiriting" required>
       </div>
 
       <div>
-        <label for="surname">Surname</label>
+        <label for="surname" data-i18n="label_surname">Surname</label>
         <input id="surname" name="surname" type="text" placeholder="Familiyangizni kiriting" required>
       </div>
 
       <div>
-        <label for="email">Email</label>
+        <label for="email" data-i18n="label_email">Email</label>
         <input id="email" name="email" type="text" placeholder="Emailingizni kiriting" required>
       </div>
       <div id="checked">
-        <label for="password">Password</label>
+        <label for="password" data-i18n="label_password">Password</label>
         <input id="password" name="password" type="password" placeholder="Parol kiriting"
           autocomplete="current-password" required>
         <img id="toggle" src="{% static 'images/view.png'%}" alt="">
@@ -55,18 +57,19 @@
         <label class="switch">
           <input id="remember" type="checkbox" />
           <span class="slider"></span>
-          <span class="label-text">Remember me</span>
+          <span class="label-text" data-i18n="remember_me">Remember me</span>
         </label>
 
       </div>
       <br>
       <br>
 
-      <button id="submitBtn" class="btn" type="submit">Kirish</button>
+      <button id="submitBtn" class="btn" type="submit" data-i18n="signup_btn">Register</button>
       <div id="msg" class="message" role="status" aria-live="polite"></div>
 
     </form>
   </main>
+  <script src="{% static 'js/i18n.js' %}"></script>
   <script src="{%static 'js/account.js'%}?v=2"></script>
 </body>
 

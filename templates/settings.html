@@ -1,57 +1,98 @@
-{%load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <title>BookCoin | Settings</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="icon" href="{% static 'images/bookLogotip.jpg'%}">
+  <script src="{% static 'js/i18n.js' %}"></script>
+  <link rel="icon" href="{% static 'images/bookLogotip.jpg' %}">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <style>
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+  </style>
+  <link rel="stylesheet" href="{% static 'css/dark.css' %}">
+  <script>if(localStorage.getItem('darkMode')==='true')document.documentElement.classList.add('dark');</script>
 </head>
 
-<body class="bg-gray-950 text-gray-100 min-h-screen flex justify-center">
+<body class="bg-gray-950 text-gray-100 min-h-screen flex justify-center pb-16">
 
-  <div class="w-full max-w-md mt-10">
+  <div class="w-full max-w-md mt-10 px-0">
 
     <!-- Header -->
     <div class="flex items-center justify-between px-4 mb-6">
-      <h1 class="text-2xl font-semibold">Settings</h1>
-      <a href="{%url 'blog:studentDashboard'%}" class="text-gray-400 hover:text-white">✖</a>
+      <h1 class="text-2xl font-semibold" data-i18n="settings_title">Settings</h1>
+      <a href="{% url 'blog:studentDashboard' %}" class="text-gray-400 hover:text-white text-xl">✖</a>
     </div>
 
-    <!-- Profile -->
-    <div class="bg-gray-900 rounded-2xl p-4 mx-4 mb-4 flex items-center gap-4 shadow">
-      <div class="w-12 h-12 rounded-full bg-indigo-600 flex items-center justify-center text-lg font-bold">
-        B
+    <!-- Profile Card -->
+    <div class="bg-gray-900 rounded-2xl p-4 mx-4 mb-2 flex items-center gap-4 shadow">
+      <div class="w-12 h-12 rounded-full bg-indigo-600 flex items-center justify-center text-lg font-bold uppercase shrink-0">
+        {% if user %}{{ user.username|first }}{% else %}?{% endif %}
       </div>
-      <div>
-        <p class="font-medium">Bekzod</p>
-        <p class="text-sm text-gray-400">bekzod@mail.com</p>
+      <div class="flex-1 min-w-0">
+        <p class="font-semibold truncate">{% if user %}{{ user.username }} {{ user.surname }}{% else %}Guest{% endif %}</p>
+        <p class="text-sm text-gray-400 truncate">{% if user %}{{ user.email }}{% else %}—{% endif %}</p>
       </div>
+      <button onclick="toggleSection('editProfile')" class="text-indigo-400 text-sm font-medium hover:text-indigo-300" data-i18n="settings_edit">Edit</button>
+    </div>
+
+    <!-- Edit Profile Form -->
+    <div id="editProfile" class="hidden mx-4 mb-4">
+      <form method="POST" action="{% url 'blog:update_profile' %}" class="bg-gray-800 rounded-2xl p-4 space-y-3">
+        {% csrf_token %}
+        <p class="text-xs text-gray-400 font-semibold uppercase mb-2" data-i18n="edit_profile_title">Edit Profile</p>
+        <div>
+          <label class="text-xs text-gray-400 mb-1 block" data-i18n="label_username">Username</label>
+          <input name="username" type="text" value="{% if user %}{{ user.username }}{% endif %}"
+            class="w-full bg-gray-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        <div>
+          <label class="text-xs text-gray-400 mb-1 block" data-i18n="label_surname">Surname</label>
+          <input name="surname" type="text" value="{% if user %}{{ user.surname }}{% endif %}"
+            class="w-full bg-gray-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        <div>
+          <label class="text-xs text-gray-400 mb-1 block" data-i18n="label_email">Email</label>
+          <input name="email" type="email" value="{% if user %}{{ user.email }}{% endif %}"
+            class="w-full bg-gray-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 py-2 rounded-xl text-sm font-semibold transition" data-i18n="settings_save">
+          Save Changes
+        </button>
+      </form>
     </div>
 
     <!-- General -->
     <div class="mx-4 mb-4">
-      <p class="text-xs text-gray-500 mb-2">GENERAL</p>
-
+      <p class="text-xs text-gray-500 mb-2 uppercase" data-i18n="settings_general">GENERAL</p>
       <div class="bg-gray-900 rounded-2xl divide-y divide-gray-800">
 
-        <div class="flex justify-between items-center p-4 hover:bg-gray-800 transition">
-          <span>🌙 Dark Mode</span>
-          <div class="w-10 h-5 bg-indigo-600 rounded-full relative">
-            <div class="w-4 h-4 bg-white rounded-full absolute top-0.5 right-0.5"></div>
+        <!-- Dark Mode -->
+        <div class="flex justify-between items-center p-4 hover:bg-gray-800 transition cursor-pointer" onclick="toggleDarkMode()">
+          <span data-i18n="settings_darkmode">🌙 Dark Mode</span>
+          <div id="darkToggle" class="w-10 h-5 rounded-full relative transition-colors duration-300 bg-gray-700">
+            <div id="darkKnob" class="w-4 h-4 bg-white rounded-full absolute top-0.5 transition-all duration-300" style="left:2px"></div>
           </div>
         </div>
 
-        <div class="flex justify-between items-center p-4 hover:bg-gray-800 transition">
-          <span>🔔 Notifications</span>
-          <div class="w-10 h-5 bg-gray-700 rounded-full relative">
-            <div class="w-4 h-4 bg-white rounded-full absolute top-0.5 left-0.5"></div>
+        <!-- Notifications -->
+        <div class="flex justify-between items-center p-4 hover:bg-gray-800 transition cursor-pointer" onclick="toggleNotifications()">
+          <span data-i18n="settings_notifications">🔔 Notifications</span>
+          <div id="notifToggle" class="w-10 h-5 rounded-full relative transition-colors duration-300 bg-gray-700">
+            <div id="notifKnob" class="w-4 h-4 bg-white rounded-full absolute top-0.5 transition-all duration-300" style="left:2px"></div>
           </div>
         </div>
 
+        <!-- Language -->
         <div class="flex justify-between items-center p-4 hover:bg-gray-800 transition">
-          <span>🌐 Language</span>
-          <span class="text-gray-400 text-sm">English</span>
+          <span data-i18n="settings_language">🌐 Language</span>
+          <select id="langSelect" onchange="setLanguage(this.value)"
+            class="bg-gray-800 text-gray-300 text-sm rounded-lg px-2 py-1 border border-gray-700 focus:outline-none">
+            <option value="en">English</option>
+            <option value="uz">O'zbek</option>
+            <option value="ru">Русский</option>
+          </select>
         </div>
 
       </div>
@@ -59,37 +100,131 @@
 
     <!-- Security -->
     <div class="mx-4 mb-4">
-      <p class="text-xs text-gray-500 mb-2">SECURITY</p>
-
+      <p class="text-xs text-gray-500 mb-2 uppercase" data-i18n="settings_security">SECURITY</p>
       <div class="bg-gray-900 rounded-2xl divide-y divide-gray-800">
-
-        <div class="flex justify-between items-center p-4 hover:bg-gray-800 transition">
-          <span>🔑 Change Password</span>
+        <div class="flex justify-between items-center p-4 hover:bg-gray-800 transition cursor-pointer"
+          onclick="toggleSection('changePassword')">
+          <span data-i18n="settings_change_password">🔑 Change Password</span>
           <span class="text-gray-500">›</span>
         </div>
-
-        <div class="flex justify-between items-center p-4 hover:bg-gray-800 transition">
-          <span>🛡 Two-Factor Auth</span>
-          <span class="text-gray-500">›</span>
-        </div>
-
       </div>
+    </div>
+
+    <!-- Change Password Form -->
+    <div id="changePassword" class="hidden mx-4 mb-4">
+      <form method="POST" action="{% url 'blog:change_password' %}" class="bg-gray-800 rounded-2xl p-4 space-y-3">
+        {% csrf_token %}
+        <p class="text-xs text-gray-400 font-semibold uppercase mb-2" data-i18n="change_password_title">Change Password</p>
+
+        {% if password_error %}
+        <p class="text-red-400 text-sm bg-red-900/30 rounded-xl px-3 py-2">{{ password_error }}</p>
+        {% endif %}
+        {% if password_success %}
+        <p class="text-green-400 text-sm bg-green-900/30 rounded-xl px-3 py-2">{{ password_success }}</p>
+        {% endif %}
+
+        <div>
+          <label class="text-xs text-gray-400 mb-1 block" data-i18n="label_current_password">Current Password</label>
+          <input name="old_password" type="password"
+            class="w-full bg-gray-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        <div>
+          <label class="text-xs text-gray-400 mb-1 block" data-i18n="label_new_password">New Password</label>
+          <input name="new_password" type="password"
+            class="w-full bg-gray-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        <div>
+          <label class="text-xs text-gray-400 mb-1 block" data-i18n="label_confirm_password">Confirm New Password</label>
+          <input name="confirm_password" type="password"
+            class="w-full bg-gray-700 rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+        </div>
+        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 py-2 rounded-xl text-sm font-semibold transition" data-i18n="settings_update_password">
+          Update Password
+        </button>
+      </form>
     </div>
 
     <!-- Danger Zone -->
     <div class="mx-4 mb-6">
-      <p class="text-xs text-gray-500 mb-2">DANGER ZONE</p>
-
+      <p class="text-xs text-gray-500 mb-2 uppercase" data-i18n="settings_danger">DANGER ZONE</p>
       <div class="bg-gray-900 rounded-2xl p-4">
-
-        <button class="w-full bg-red-600 hover:bg-red-700 p-3 rounded-xl transition">
+        <button onclick="confirmDelete()"
+          class="w-full bg-red-600 hover:bg-red-700 p-3 rounded-xl transition font-semibold" data-i18n="settings_delete">
           Delete Account
         </button>
+      </div>
+    </div>
 
+    <!-- Delete Confirm Modal -->
+    <div id="deleteModal" class="hidden fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+      <div class="bg-gray-900 rounded-2xl p-6 mx-4 max-w-sm w-full shadow-xl">
+        <h2 class="text-lg font-bold mb-2" data-i18n="delete_confirm_title">Delete Account?</h2>
+        <p class="text-gray-400 text-sm mb-6" data-i18n="delete_confirm_msg">This action is permanent and cannot be undone.</p>
+        <div class="flex gap-3">
+          <button onclick="closeDeleteModal()" class="flex-1 bg-gray-700 hover:bg-gray-600 py-2 rounded-xl transition text-sm font-semibold" data-i18n="delete_cancel">
+            Cancel
+          </button>
+          <form method="POST" action="{% url 'blog:delete_account' %}" class="flex-1">
+            {% csrf_token %}
+            <button type="submit" class="w-full bg-red-600 hover:bg-red-700 py-2 rounded-xl transition text-sm font-semibold" data-i18n="delete_yes">
+              Yes, Delete
+            </button>
+          </form>
+        </div>
       </div>
     </div>
 
   </div>
+
+  <script>
+    function toggleSection(id) {
+      document.getElementById(id).classList.toggle('hidden');
+    }
+
+    function setToggle(trackId, knobId, enabled) {
+      const track = document.getElementById(trackId);
+      const knob = document.getElementById(knobId);
+      if (enabled) {
+        track.classList.add('bg-indigo-600');
+        track.classList.remove('bg-gray-700');
+        knob.style.left = '22px';
+      } else {
+        track.classList.add('bg-gray-700');
+        track.classList.remove('bg-indigo-600');
+        knob.style.left = '2px';
+      }
+    }
+
+    function syncDarkToggleUI(enabled) {
+      setToggle('darkToggle', 'darkKnob', enabled);
+    }
+
+    function toggleDarkMode() {
+      const next = toggleDarkModeGlobal();
+      syncDarkToggleUI(next);
+    }
+
+    function applyNotifications(enabled) {
+      setToggle('notifToggle', 'notifKnob', enabled);
+    }
+
+    function toggleNotifications() {
+      const next = !(localStorage.getItem('notifications') === 'true');
+      localStorage.setItem('notifications', next);
+      applyNotifications(next);
+    }
+
+    function confirmDelete() { document.getElementById('deleteModal').classList.remove('hidden'); }
+    function closeDeleteModal() { document.getElementById('deleteModal').classList.add('hidden'); }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      syncDarkToggleUI(localStorage.getItem('darkMode') === 'true');
+      applyNotifications(localStorage.getItem('notifications') === 'true');
+      {% if password_error or password_success %}
+      document.getElementById('changePassword').classList.remove('hidden');
+      {% endif %}
+    });
+  </script>
 
 </body>
 </html>

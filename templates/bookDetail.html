@@ -92,6 +92,8 @@
             box-shadow: 25px 25px 50px rgba(46, 0, 82, 0.15), -5px 0 15px rgba(0,0,0,0.05);
         }
     </style>
+  <link rel="stylesheet" href="{% static 'css/dark.css' %}">
+  <script>if(localStorage.getItem('darkMode')==='true')document.documentElement.classList.add('dark');</script>
 </head>
 <body class="bg-surface font-body text-on-surface selection:bg-secondary-fixed selection:text-on-secondary-fixed">
 <!-- TopNavBar -->
@@ -100,17 +102,17 @@
 <div class="flex items-center gap-12">
 <span class="text-2xl font-bold tracking-tighter text-[#4B0082] dark:text-white font-headline">BookCoin</span>
 <div class="hidden md:flex items-center gap-8 font-headline tracking-tight">
-<a class="text-[#4B0082] dark:text-white border-b-2 border-[#fcd400] pb-1" href="{%url 'blog:catalog'%}">Catalog</a>
-<a class="text-slate-500 dark:text-slate-400 hover:text-[#4B0082] transition-colors" href="{%url 'blog:studentDashboard'%}">Dashboard</a>
-<a class="text-slate-500 dark:text-slate-400 hover:text-[#4B0082] transition-colors" href="{%url 'blog:bookDetail'%}">Library</a>
+<a class="{% if request.resolver_match.url_name == 'catalog' %}text-[#4B0082] dark:text-white border-b-2 border-[#fcd400] pb-1{% else %}text-slate-500 dark:text-slate-400 hover:text-[#4B0082] transition-colors{% endif %}" href="{%url 'blog:catalog'%}">Catalog</a>
+<a class="{% if request.resolver_match.url_name == 'studentDashboard' %}text-[#4B0082] dark:text-white border-b-2 border-[#fcd400] pb-1{% else %}text-slate-500 dark:text-slate-400 hover:text-[#4B0082] transition-colors{% endif %}" href="{%url 'blog:studentDashboard'%}">Dashboard</a>
+<a class="{% if request.resolver_match.url_name == 'bookDetail' %}text-[#4B0082] dark:text-white border-b-2 border-[#fcd400] pb-1{% else %}text-slate-500 dark:text-slate-400 hover:text-[#4B0082] transition-colors{% endif %}" href="{%url 'blog:bookDetail'%}">Library</a>
 </div>
 </div>
 <div class="flex items-center gap-4">
-<button class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-slate-50 transition-colors rounded-full active:scale-95 duration-200">notifications</button>
-<button class="material-symbols-outlined p-2 text-on-surface-variant hover:bg-slate-50 transition-colors rounded-full active:scale-95 duration-200">history</button>
-<div class="h-10 w-10 rounded-full bg-surface-container-highest overflow-hidden border-2 border-surface">
-<img class="w-full h-full object-cover" data-alt="portrait of a focused university student with glasses in a scholarly environment" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8nBIA_PvNGi5qkwdUPI65pOeBBrmVrU4--z5npYHWdvNMr-VqqRWm5mxkxT9RYiI-k-j9vw3fLZt9N1WfZ0jOByovQBV2bXge36MeYmorhgL8YOzCEZjN3W563XeItI0jCLasgoeMfmfuwi2qXSLVdlrlJTTnCurbD8et5MklBfjfDtW5DXlXNyFTUae48FP_JHAnuq0n0LM6lIBkmcvsIbChyly1zV7_-kAbeA81Tgf5CUzholBRhH5EmQMnJXuKSRNZhr7zsFU"/>
-</div>
+<a href="{% url 'blog:settings_page' %}"
+   class="w-10 h-10 rounded-full bg-[#4B0082] border-2 border-surface flex items-center justify-center text-white text-sm font-bold uppercase overflow-hidden">
+  <img id="bd-avatar-img" class="w-full h-full object-cover hidden" src="" alt=""/>
+  <span id="bd-avatar-letter">{% if user %}{{ user.username|first }}{% else %}?{% endif %}</span>
+</a>
 </div>
 </div>
 <div class="bg-slate-100 dark:bg-slate-800 h-[1px] w-full"></div>
@@ -118,11 +120,9 @@
 <main class="pt-32 pb-24 px-8 max-w-7xl mx-auto">
 <!-- Breadcrumb -->
 <nav class="flex items-center gap-2 text-sm text-on-surface-variant mb-12 font-headline">
-<a class="hover:text-primary" href="#">Catalog</a>
+<a class="hover:text-primary" href="{% url 'blog:catalog' %}">Catalog</a>
 <span class="material-symbols-outlined text-sm">chevron_right</span>
-<a class="hover:text-primary" href="#">Academic Press</a>
-<span class="material-symbols-outlined text-sm">chevron_right</span>
-<span class="text-primary font-bold">Principles of Quantum Macroeconomics</span>
+<span id="bd-genre" class="text-primary font-bold"></span>
 </nav>
 <div class="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
 <!-- Left Column: Book Mockup -->
@@ -130,7 +130,7 @@
 <div class="relative group">
 <div class="absolute -inset-4 bg-primary-fixed/30 rounded-xl blur-3xl opacity-50 group-hover:opacity-70 transition-opacity"></div>
 <div class="relative aspect-[3/4] rounded-lg overflow-hidden book-shadow transform -rotate-2 hover:rotate-0 transition-transform duration-500">
-<img class="w-full h-full object-cover" data-alt="premium hardback book cover with elegant minimalist typography and abstract geometric gold foil patterns" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8eWNDoXXCC-noY3i4psS7Pn6r3ytPpa0eKPHYSH81eI96fLdCMjJN3DZK5kZPxoYMACGzOBd92bsZo8U2S9fZdloxLbs_P2t7kDUMc76nrJzB9rti7FdJXfBeAj_ceaXVD38fTrVBjQ8MihhCPmrRdeEhlQFQF1o_oOe0nAjH5tKQxxggA5TgaYG_PQ2jUbFK1ULNw3BjY1wls9a6PXEMudL_ukNrecwO6_PECtgu5McXZfTHFX_yuwVgRMW3T43UGYA12Fc2iEE"/>
+<img id="bd-cover" class="w-full h-full object-cover" src="" alt="Book cover"/>
 </div>
 <!-- Overlay Badge -->
 <div class="absolute -bottom-6 -right-6 bg-white p-4 rounded-xl shadow-xl flex items-center gap-3">
@@ -148,11 +148,10 @@
 <div class="lg:col-span-7 flex flex-col gap-10">
 <header>
 <div class="flex items-center gap-3 mb-4">
-<span class="px-3 py-1 bg-primary-container/10 text-primary-container text-xs font-bold rounded-full uppercase tracking-widest">Economics</span>
-<span class="px-3 py-1 bg-surface-container-high text-on-surface-variant text-xs font-bold rounded-full uppercase tracking-widest">Post-Graduate</span>
+<span id="bd-genre-badge" class="px-3 py-1 bg-primary-container/10 text-primary-container text-xs font-bold rounded-full uppercase tracking-widest"></span>
 </div>
-<h1 class="text-5xl md:text-6xl font-headline font-extrabold tracking-tighter text-primary leading-none mb-4">Principles of Quantum Macroeconomics</h1>
-<p class="text-xl text-on-surface-variant font-headline italic">Dr. Alistair Thorne, FRSA</p>
+<h1 id="bd-title" class="text-5xl md:text-6xl font-headline font-extrabold tracking-tighter text-primary leading-none mb-4"></h1>
+<p id="bd-author" class="text-xl text-on-surface-variant font-headline italic"></p>
 </header>
 <div class="prose prose-slate max-w-none">
 <h3 class="text-sm font-bold uppercase tracking-widest text-on-surface-variant mb-3 font-headline">Abstract</h3>
@@ -203,6 +202,32 @@
 </div>
 </div>
 </div>
+<!-- Comments Section -->
+<section id="comments-section" class="mt-16 hidden">
+  <h2 class="text-2xl font-headline font-bold text-primary mb-8 tracking-tight">Izohlar</h2>
+
+  <!-- Comment list -->
+  <div id="comment-list" class="flex flex-col gap-4 mb-10"></div>
+
+  <!-- No comments placeholder -->
+  <p id="no-comments" class="text-on-surface-variant text-sm mb-10 hidden">Hali izoh yo'q. Birinchi bo'ling!</p>
+
+  <!-- Add comment form -->
+  <div class="bg-surface-container-lowest border border-outline-variant/20 rounded-xl p-6 shadow-sm">
+    <h3 class="text-sm font-bold uppercase tracking-widest text-on-surface-variant mb-4 font-headline">Izoh qoldiring</h3>
+    <textarea id="comment-input"
+      class="w-full rounded-xl border border-outline-variant bg-surface-container-low p-4 text-sm text-on-surface resize-none focus:outline-none focus:ring-2 focus:ring-primary/30"
+      rows="3" placeholder="Fikringizni yozing..."></textarea>
+    <div class="flex items-center justify-between mt-3">
+      <p id="comment-error" class="text-xs text-error hidden">Iltimos, matn kiriting.</p>
+      <button id="comment-submit"
+        class="ml-auto bg-primary text-white px-6 py-2 rounded-full text-sm font-bold font-headline hover:bg-primary-container transition-colors active:scale-95">
+        Yuborish
+      </button>
+    </div>
+  </div>
+</section>
+
 <!-- Recommendations Section -->
 <section class="mt-32">
 <div class="flex items-end justify-between mb-12">
@@ -274,4 +299,82 @@
 </div>
 </div>
 </footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const raw = localStorage.getItem('selectedBook');
+    if (!raw) return;
+    const book = JSON.parse(raw);
+
+    const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val || ''; };
+    const setSrc = (id, src) => { const el = document.getElementById(id); if (el && src) el.src = src; };
+
+    set('bd-title', book.title);
+    set('bd-author', book.author);
+    set('bd-genre', book.genre);
+    set('bd-genre-badge', book.genre);
+    setSrc('bd-cover', book.image);
+
+    const savedImg = localStorage.getItem('profileImage');
+    if (savedImg) {
+      const img = document.getElementById('bd-avatar-img');
+      const letter = document.getElementById('bd-avatar-letter');
+      if (img) { img.src = savedImg; img.classList.remove('hidden'); }
+      if (letter) letter.classList.add('hidden');
+    }
+
+    // Comments: faqat DB kitoblarda ishlaydi (id: 'db-123')
+    if (typeof book.id === 'string' && book.id.startsWith('db-')) {
+      const dbId = book.id.replace('db-', '');
+      const section = document.getElementById('comments-section');
+      section.classList.remove('hidden');
+
+      function renderComment(c) {
+        return `<div class="bg-surface-container-low rounded-xl p-4 border border-outline-variant/10">
+          <p class="text-xs font-bold text-primary mb-1">${c.author}</p>
+          <p class="text-sm text-on-surface">${c.text}</p>
+        </div>`;
+      }
+
+      function loadComments() {
+        fetch(`/api/comments/?book_id=${dbId}`)
+          .then(r => r.json())
+          .then(data => {
+            const list = document.getElementById('comment-list');
+            const empty = document.getElementById('no-comments');
+            if (data.comments.length === 0) {
+              list.innerHTML = '';
+              empty.classList.remove('hidden');
+            } else {
+              empty.classList.add('hidden');
+              list.innerHTML = data.comments.map(renderComment).join('');
+            }
+          });
+      }
+
+      loadComments();
+
+      document.getElementById('comment-submit').addEventListener('click', function() {
+        const input = document.getElementById('comment-input');
+        const errEl = document.getElementById('comment-error');
+        const text = input.value.trim();
+        if (!text) { errEl.classList.remove('hidden'); return; }
+        errEl.classList.add('hidden');
+
+        fetch('/api/comments/', {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({book_id: dbId, text: text})
+        })
+        .then(r => r.json())
+        .then(data => {
+          if (data.success) {
+            input.value = '';
+            loadComments();
+          }
+        });
+      });
+    }
+  });
+</script>
 </body></html>

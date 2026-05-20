@@ -13,6 +13,8 @@
     <link rel="stylesheet" href="{% static 'media/styleMedia.css' %}">
 
     <title>BookCoin</title>
+    <link rel="stylesheet" href="{% static 'css/dark.css' %}">
+    <script>if(localStorage.getItem('darkMode')==='true')document.documentElement.classList.add('dark');</script>
 </head>
 
 <body>
@@ -26,8 +28,8 @@
          
         </div>
     
-        <h1 id="signin-title">Login orqali kirish</h1>
-        <p class="lead">Iltimos username va password kiriting</p>
+        <h1 id="signin-title" data-i18n="login_title">Login</h1>
+        <p class="lead" data-i18n="login_subtitle">Please enter your username and password</p>
     
         <form method="post" action="{%url 'blog:login'%}" id="loginForm" class="form" autocomplete="off" onsubmit="return false;">
           {% csrf_token %}
@@ -47,19 +49,20 @@
             <label class="switch">
                <input id="remember" type="checkbox" />
                <span class="slider"></span>
-              <span class="label-text">Remember me</span>
+              <span class="label-text" data-i18n="remember_me">Remember me</span>
             </label>
           </div>
           <br>
           <br>
     
-          <button id="submitBtn" class="btn" type="submit">Kirish</button>
-          <button id="submitBtn" class="btn" type="button"><a href="{% url 'blog:signup' %}">Ro'yxatdan o'tish</a></button>
+          <button id="submitBtn" class="btn" type="submit" data-i18n="login_btn">Login</button>
+          <button id="submitBtn" class="btn" type="button"><a href="{% url 'blog:signup' %}" data-i18n="login_signup_btn">Sign Up</a></button>
     
           <div id="msg" class="message" role="status" aria-live="polite"></div>
     
         </form>
       </main>
+    <script src="{% static 'js/i18n.js' %}"></script>
     <script src="{% static 'js/index.js' %}?v=2"></script>
 </body>
 

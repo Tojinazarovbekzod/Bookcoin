@@ -108,6 +108,8 @@
             backdrop-filter: blur(20px);
         }
     </style>
+  <link rel="stylesheet" href="{% static 'css/dark.css' %}">
+  <script>if(localStorage.getItem('darkMode')==='true')document.documentElement.classList.add('dark');</script>
 </head>
 
 <body class="bg-surface text-on-surface min-h-screen">
@@ -120,10 +122,10 @@
                     class="text-2xl font-bold tracking-tighter text-[#4B0082] dark:text-white brand-font">BookCoin</span>
                 <!-- Search Bar -->
                 <div
-                    class="hidden md:flex items-center bg-surface-container-low rounded-full px-4 py-2 w-96 border-none">
-                    <span id="search-input" class="material-symbols-outlined text-outline mr-2"
+                    class="hidden md:flex items-center bg-surface-container-low rounded-full px-4 py-2 w-96 border-none relative">
+                    <span class="material-symbols-outlined text-outline mr-2"
                         data-icon="search">search</span>
-                    <input class="bg-transparent border-none focus:ring-0 text-sm w-full font-body"
+                    <input id="search-input" class="bg-transparent border-none focus:ring-0 text-sm w-full font-body"
                         placeholder="Search academic papers, textbooks..." type="text" />
                     <div id="search-results"
                         class="search-results hidden absolute top-full left-0 right-0 bg-white mt-2 rounded-xl shadow-2xl z-50 max-h-80 overflow-y-auto border border-purple-200 w-full max-w-3xl">
@@ -132,25 +134,19 @@
             </div>
             <div class="flex items-center gap-8">
                 <div class="hidden lg:flex items-center gap-6">
-                    <a class="text-[#4B0082] dark:text-white border-b-2 border-[#fcd400] pb-1 font-headline tracking-tight"
+                    <a class="{% if request.resolver_match.url_name == 'catalog' %}text-[#4B0082] dark:text-white border-b-2 border-[#fcd400] pb-1{% else %}text-slate-500 dark:text-slate-400 hover:text-[#4B0082] transition-colors{% endif %} font-headline tracking-tight"
                         href="{%url 'blog:catalog'%}">Catalog</a>
-                    <a class="text-slate-500 dark:text-slate-400 hover:text-[#4B0082] font-headline tracking-tight transition-colors"
+                    <a class="{% if request.resolver_match.url_name == 'studentDashboard' %}text-[#4B0082] dark:text-white border-b-2 border-[#fcd400] pb-1{% else %}text-slate-500 dark:text-slate-400 hover:text-[#4B0082] transition-colors{% endif %} font-headline tracking-tight"
                         href="{%url 'blog:studentDashboard'%}">Dashboard</a>
-                    <a class="text-slate-500 dark:text-slate-400 hover:text-[#4B0082] font-headline tracking-tight transition-colors"
+                    <a class="{% if request.resolver_match.url_name == 'bookDetail' %}text-[#4B0082] dark:text-white border-b-2 border-[#fcd400] pb-1{% else %}text-slate-500 dark:text-slate-400 hover:text-[#4B0082] transition-colors{% endif %} font-headline tracking-tight"
                         href="{%url 'blog:bookDetail'%}">Library</a>
                 </div>
                 <div class="flex items-center gap-4">
-                    <button
-                        class="material-symbols-outlined text-outline hover:bg-slate-50 p-2 rounded-full transition-colors"
-                        data-icon="notifications">notifications</button>
-                    <button
-                        class="material-symbols-outlined text-outline hover:bg-slate-50 p-2 rounded-full transition-colors"
-                        data-icon="history">history</button>
-                    <div class="w-10 h-10 rounded-full overflow-hidden border-2 border-primary-fixed">
-                        <img alt="User profile avatar"
-                            data-alt="professional portrait of a scholar in a library setting with soft warm background lighting"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuALkSJygQ19bDmHLQ4g3BazqSAhkL9yfB-SM0hOJwGzcPaz9hAWPuQp8IN1YYw-cpd8cC85Ub8oAQuUya0AZH3zxn1Kmmt2NBB-F0KkLbYSU7mOEF8MuIQzGy7PV1n77CgCaMFKoEr6lqtZ2MbMGRlffFgcwL8J__ZUpzW03M4asLbDtX4nmFwqCdKbyIZexLbX0I1spCjU2F5E67mj1TUarneI0MHpymdfeq5e3gMhzLFf-815xXrjI1mIBDm5JNyGnNjOrh03_bg" />
-                    </div>
+                    <a href="{% url 'blog:settings_page' %}"
+                       class="w-10 h-10 rounded-full bg-[#4B0082] border-2 border-primary-fixed flex items-center justify-center text-white text-sm font-bold uppercase overflow-hidden">
+                        <img id="cat-avatar-img" src="" alt="" class="w-full h-full object-cover hidden"/>
+                        <span id="cat-avatar-letter">{% if user %}{{ user.username|first }}{% else %}?{% endif %}</span>
+                    </a>
                 </div>
             </div>
         </div>
@@ -159,7 +155,7 @@
     <div class="pt-24 flex max-w-screen-2xl mx-auto">
         <!-- SideNavBar / Filters -->
         <aside
-            class="hidden lg:flex flex-col p-6 space-y-8 h-[calc(100vh-6rem)] w-72 sticky top-24 bg-surface font-['Inter'] leading-relaxed">
+            class="hidden lg:flex flex-col p-6 space-y-8 h-[calc(100vh-6rem)] w-72 sticky top-24 bg-surface font-['Inter'] leading-relaxed overflow-y-auto">
             <div>
                 <h3 class="text-xs font-bold uppercase tracking-widest text-outline mb-6">Discovery</h3>
                 <div class="space-y-2">
@@ -189,31 +185,10 @@
                     <!-- Genre Filter -->
                     <div class="space-y-3">
                         <label class="text-sm font-semibold text-on-surface">Genre</label>
-                        <div class="space-y-2">
-                            <label class="flex items-center gap-3 cursor-pointer group">
-                                <input checked="" class="rounded border-outline-variant text-primary focus:ring-primary"
-                                    type="checkbox" />
-                                <span
-                                    class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">Quantum
-                                    Physics</span>
-                            </label>
-                            <label class="flex items-center gap-3 cursor-pointer group">
-                                <input class="rounded border-outline-variant text-primary focus:ring-primary"
-                                    type="checkbox" />
-                                <span
-                                    class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">Macroeconomics</span>
-                            </label>
-                            <label class="flex items-center gap-3 cursor-pointer group">
-                                <input class="rounded border-outline-variant text-primary focus:ring-primary"
-                                    type="checkbox" />
-                                <span
-                                    class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">Neural
-                                    Networks</span>
-                            </label>
-                        </div>
+                        <div id="genre-filters" class="space-y-2"></div>
                     </div>
                     <!-- Rental Duration -->
-                    <div class="space-y-3">
+                    <div class="space-y-3 relative z-10">
                         <label class="text-sm font-semibold text-on-surface">Rental Duration</label>
                         <select
                             class="w-full bg-surface-container-low border-none rounded-lg text-sm focus:ring-2 focus:ring-primary/20">
@@ -233,176 +208,28 @@
                     <h1 class="text-5xl font-black tracking-tighter text-primary mb-2">Academic Catalog</h1>
                     <p class="text-on-surface-variant max-w-lg leading-relaxed">
                         Access the world's most prestigious academic ledger. Spend your earned <span
-                            class="font-bold text-secondary">BookCoins</span> on verified research and peer-reviewed
-                        excellence.
+                            class="font-bold text-secondary">BookCoins</span> on verified research and peer-reviewed excellence.
                     </p>
                 </div>
                 <div class="flex items-center gap-4 bg-surface-container-lowest p-2 rounded-full shadow-sm">
-                    <button class="px-6 py-2 bg-primary text-white rounded-full text-sm font-bold">Grid View</button>
-                    <button
-                        class="px-6 py-2 text-outline hover:text-primary rounded-full text-sm font-medium transition-colors">List
-                        View</button>
+                    <button id="btn-grid" onclick="setView('grid')" class="px-6 py-2 bg-primary text-white rounded-full text-sm font-bold transition-all">Grid View</button>
+                    <button id="btn-list" onclick="setView('list')" class="px-6 py-2 text-outline hover:text-primary rounded-full text-sm font-medium transition-colors">List View</button>
                 </div>
             </header>
-            <!-- Bento-Style Book Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8">
-                <!-- Book Card 1 -->
-                <div
-                    class="group relative flex flex-col bg-surface-container-lowest rounded-lg overflow-hidden transition-all duration-300 hover:-translate-y-2">
-                    <div class="aspect-[3/4] overflow-hidden relative">
-                        <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                            data-alt="ancient thick hardcover book with gold embossing on a dark wood background with scholarly lighting"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuHvOnTwlsbcft1kfVppcdYstMPZEFK4Gv_uAYI2LVt8Q7RVkhJcX65EbX_pcZL7gEgi12mECVYtn6SzlQPtAnodCMsOYvzdQaMq2Rsp10d9RMfsFZEhFbH-gDgjzhPZoVlKqsmt1GQ5KF57GUXt6737bXKwAJVT-xwboLc1q_890Riv13ESxPBlcj4TVzAGkAX_AcDp5aO0a64zhpyIQmnrJBsbQNen_i-olsAyZ5UDGE9pjqO3aX7gFru3r0UOyOV6n6xXQyVPQ" />
-                    </div>
-                    <div class="p-6 flex flex-col flex-1">
-                        <span
-                            class="text-[10px] uppercase tracking-widest font-bold text-outline-variant mb-2">Theoretical
-                            Physics</span>
-                        <h3
-                            class="text-xl font-bold leading-tight text-primary mb-1 group-hover:text-primary-container transition-colors">
-                            Quantum Mechanics: The New Era</h3>
-                        <p class="text-sm text-on-surface-variant mb-6">Dr. Aris Thorne</p>
-                        <div class="mt-auto flex items-center justify-between">
-                            <div class="flex -space-x-2">
-                                <div class="w-8 h-8 rounded-full border-2 border-white bg-slate-200"></div>
-                                <div class="w-8 h-8 rounded-full border-2 border-white bg-slate-300"></div>
-                                <div class="text-[10px] flex items-center pl-4 text-outline font-bold">+12 Readers</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Book Card 2 -->
-                <div
-                    class="group relative flex flex-col bg-surface-container-lowest rounded-lg overflow-hidden transition-all duration-300 hover:-translate-y-2">
-                    <div class="aspect-[3/4] overflow-hidden relative">
-                        <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                            data-alt="Modern minimalist library shelves with clean white book spines and dramatic architectural shadows"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBNnUWEgy9Z0hikyRrRFptlQ0x1SvKQMamrPlFxhdCyavenL0lllldlxLgG2PXMTMkMd2eYXQbLHxmkbzM3Y7kSQfad79IXNR5fSv9wfyFt0JRk8uTHjhGS95nPnV2rLTnwvspiJ93awmPhSnUVlPzf4ZUHK-RCRlM3Pq0_APul1GRL_S3Mg5o1rF5tWgRyG-jnSne8lfLkoTG85sQ6z10YMV9R-ddxp38xcYc-AUDk1FlxUz_eqsqfVCfqU371mQuHqYU8VY_iOZ0" />
-                    </div>
-                    <div class="p-6 flex flex-col flex-1">
-                        <span class="text-[10px] uppercase tracking-widest font-bold text-outline-variant mb-2">Digital
-                            Economics</span>
-                        <h3
-                            class="text-xl font-bold leading-tight text-primary mb-1 group-hover:text-primary-container transition-colors">
-                            The Architecture of Ledgering</h3>
-                        <p class="text-sm text-on-surface-variant mb-6">Satoshi N. (Ed.)</p>
-                        <div class="mt-auto flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-secondary text-sm" data-icon="star"
-                                    style="font-variation-settings: 'FILL' 1;">star</span>
-                                <span class="text-xs font-bold text-on-surface">4.9</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Book Card 3 -->
-                <div
-                    class="group relative flex flex-col bg-surface-container-lowest rounded-lg overflow-hidden transition-all duration-300 hover:-translate-y-2">
-                    <div class="aspect-[3/4] overflow-hidden relative">
-                        <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                            data-alt="Person writing in a journal with a fountain pen by a window with soft morning light and dust motes"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdamoqyXTQbWK8ZLwW7iS3xNLpwp7bjKjqA-Le7AnSbMoZKS1Ad7Et3cKCJI_WPTQsl556dMVbS5zk51Xj4tPRbpPUZXobtcKv2tb3YOgyjXHoH6uSEG6eJ7HH5-wbrCZb57oxLMY1IHtkrurgtz6JtTtDMobtUlgI1HfZqA6d-ok72amncC4Xh40nsm5II3d-2CaYnLCoVmx82yYAuLykKElhJmttpe-6BXwR7bwQ777yUqrOrPZerkxkR-jLEP12h2F-cTwvzSk" />
-                    </div>
-                    <div class="p-6 flex flex-col flex-1">
-                        <span
-                            class="text-[10px] uppercase tracking-widest font-bold text-outline-variant mb-2">Cognitive
-                            Science</span>
-                        <h3
-                            class="text-xl font-bold leading-tight text-primary mb-1 group-hover:text-primary-container transition-colors">
-                            Neuro-Linguistics in AI</h3>
-                        <p class="text-sm text-on-surface-variant mb-6">Prof. Elena Miras</p>
-                        <div class="mt-auto flex items-center justify-between">
-                            <span class="text-[10px] font-bold text-error bg-error-container px-2 py-1 rounded">LOW
-                                STOCK</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- Book Card 4 -->
-                <div
-                    class="group relative flex flex-col bg-surface-container-lowest rounded-lg overflow-hidden transition-all duration-300 hover:-translate-y-2">
-                    <div class="aspect-[3/4] overflow-hidden relative">
-                        <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                            data-alt="Modern tablet displaying a digital library interface with floating golden coin icons and holographic text"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuAeml7Wbbmms3fWbpcGiwpXyDRpM9MRdKXeEKB767fRBtTGOxtxyQebtQqxkaTv57l34xc8EE1LH8BBna3bavIAtePrE7N26W_a2W-5_jYZvGvtOuhoJCQT4kt9TwKpJChsRA6OBmpCzsMwFFLc5eMvj-fXUXHXZHEI_VWZ6pgDhxab8O2PDww9YLx35WhKfEDq8VykZB49ZhqNRdIVoVk3NZ2lMEc7U1CM3JBP88ONTw3KTh8rR-YIBk0r5mB6VRgvvnDbF6W5N9I" />
-                    </div>
-                    <div class="p-6 flex flex-col flex-1">
-                        <span
-                            class="text-[10px] uppercase tracking-widest font-bold text-outline-variant mb-2">Anthology</span>
-                        <h3
-                            class="text-xl font-bold leading-tight text-primary mb-1 group-hover:text-primary-container transition-colors">
-                            The Great Academic Rebound</h3>
-                        <p class="text-sm text-on-surface-variant mb-6">Collection of 2024 Journals</p>
-                        <div class="mt-auto flex items-center justify-between">
-                            <span
-                                class="text-[10px] font-bold text-primary-container bg-primary-fixed px-2 py-1 rounded">PREMIUM
-                                BUNDLE</span>
-                        </div>
-                    </div>
-                </div>
-                <!-- Book Card 5 (Repeated Style for Grid Fill) -->
-                <div
-                    class="group relative flex flex-col bg-surface-container-lowest rounded-lg overflow-hidden transition-all duration-300 hover:-translate-y-2">
-                    <div class="aspect-[3/4] overflow-hidden relative">
-                        <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                            data-alt="Abstract visualization of data streams flowing into an open book, cinematic lighting with neon blue and gold accents"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuDbNJS3KXTQ7g_1jc8BBxQnN1qwfRhRYG7TKMdHcCvLm9Dhh86TTVGQzGE2nHmdBsuYvBw8K8cpevXkxHdvdpHaFb_hE0sl_griUjR5Jdyi-bzS6SpVibHtwHqGq7Q0Li7cVER1iWp6sHHBI0khfk-BxKlJi6Ru9t1ZP96HA0vhGZotsh2kT6zHYly4iOiGAQV3NLdrMu5vX4APrn56V_Fv5Djy9Ogm3ig2hBToVxEuAhnpMB2DhFoTOdm5hpEAudpctciczJO719E" />
-                    </div>
-                    <div class="p-6 flex flex-col flex-1">
-                        <span
-                            class="text-[10px] uppercase tracking-widest font-bold text-outline-variant mb-2">Bio-Engineering</span>
-                        <h3
-                            class="text-xl font-bold leading-tight text-primary mb-1 group-hover:text-primary-container transition-colors">
-                            Genetic Legality &amp; Coinage</h3>
-                        <p class="text-sm text-on-surface-variant mb-6">Marcus Vane</p>
-                        <div class="mt-auto flex items-center justify-between">
-                            <div class="flex items-center gap-2">
-                                <span class="material-symbols-outlined text-secondary text-sm"
-                                    data-icon="history_edu">history_edu</span>
-                                <span class="text-xs font-bold text-on-surface">Verified</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Book Card 6 -->
-                <div
-                    class="group relative flex flex-col bg-surface-container-lowest rounded-lg overflow-hidden transition-all duration-300 hover:-translate-y-2">
-                    <div class="aspect-[3/4] overflow-hidden relative">
-                        <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                            data-alt="Stylized portrait of a diverse group of academics studying in a high-tech glass-walled futuristic laboratory"
-                            src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEPHR34ooc9BZUvb9xs86e9FmvUJPofYElbG2dt9YdnLF5471OzxePktvLKsm-RcBTswmrXI7mHWVlupLjl6Q5CZx4Ox5pcBDcqzh8dWdpFpD0x2mYXnA_O44Jh_BaCm62M5_8chHYUIOeUELQHQGlBJdhufb7WDLzoi9k1F_RvAVEKH_9DVkNNobOHwkfNiZ0OZISLAyOtVEzfweZGUv6I-eNxyaoippdifNRCQIo-Shn57nXR3Km_5e8DATc0ZiRwxCimDlm5Wg" />
-                    </div>
-                    <div class="p-6 flex flex-col flex-1">
-                        <span class="text-[10px] uppercase tracking-widest font-bold text-outline-variant mb-2">Social
-                            Sciences</span>
-                        <h3
-                            class="text-xl font-bold leading-tight text-primary mb-1 group-hover:text-primary-container transition-colors">
-                            The Digital Agora</h3>
-                        <p class="text-sm text-on-surface-variant mb-6">Sarah Chen, PhD</p>
-                        <div class="mt-auto flex items-center justify-between">
-                            <div class="text-[10px] font-bold text-secondary uppercase">Popular Choice</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+
+            <!-- Book Grid -->
+            <div id="catalog-grid" class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8"></div>
+
             <!-- Pagination -->
             <footer class="mt-20 flex justify-center items-center gap-4">
-                <button
+                <button id="btn-prev" onclick="changePage(-1)"
                     class="w-12 h-12 rounded-full flex items-center justify-center text-outline hover:bg-surface-container transition-colors">
-                    <span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+                    <span class="material-symbols-outlined">chevron_left</span>
                 </button>
-                <div class="flex gap-2">
-                    <button class="w-12 h-12 rounded-full bg-primary text-white font-bold">1</button>
-                    <button
-                        class="w-12 h-12 rounded-full text-on-surface hover:bg-surface-container font-medium transition-colors">2</button>
-                    <button
-                        class="w-12 h-12 rounded-full text-on-surface hover:bg-surface-container font-medium transition-colors">3</button>
-                    <span class="w-12 h-12 flex items-center justify-center text-outline">...</span>
-                    <button
-                        class="w-12 h-12 rounded-full text-on-surface hover:bg-surface-container font-medium transition-colors">12</button>
-                </div>
-                <button
+                <div id="page-numbers" class="flex gap-2"></div>
+                <button id="btn-next" onclick="changePage(1)"
                     class="w-12 h-12 rounded-full flex items-center justify-center text-outline hover:bg-surface-container transition-colors">
-                    <span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+                    <span class="material-symbols-outlined">chevron_right</span>
                 </button>
             </footer>
         </main>
@@ -427,19 +254,9 @@
             </div>
         </div>
     </footer>
+    {{ db_books|json_script:"books-data" }}
     <script>
-        const books = [{ id: 1, title: "Quantum Mechanics: The New Era", author: "Dr. Aris Thorne", genre: "Theoretical Physics", price: 85, isbn: "978-3-16-148410-0", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCuHvOnTwlsbcft1kfVppcdYstMPZEFK4Gv_uAYI2LVt8Q7RVkhJcX65EbX_pcZL7gEgi12mECVYtn6SzlQPtAnodCMsOYvzdQaMq2Rsp10d9RMfsFZEhFbH-gDgjzhPZoVlKqsmt1GQ5KF57GUXt6737bXKwAJVT-xwboLc1q_890Riv13ESxPBlcj4TVzAGkAX_AcDp5aO0a64zhpyIQmnrJBsbQNen_i-olsAyZ5UDGE9pjqO3aX7gFru3r0UOyOV6n6xXQyVPQ" },
-        { id: 2, title: "The Architecture of Ledgering", author: "Satoshi N.", genre: "Digital Economics", price: 120, isbn: "978-3-16-148411-7", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBNnUWEgy9Z0hikyRrRFptlQ0x1SvKQMamrPlFxhdCyavenL0lllldlxLgG2PXMTMkMd2eYXQbLHxmkbzM3Y7kSQfad79IXNR5fSv9wfyFt0JRk8uTHjhGS95nPnV2rLTnwvspiJ93awmPhSnUVlPzf4ZUHK-RCRlM3Pq0_APul1GRL_S3Mg5o1rF5tWgRyG-jnSne8lfLkoTG85sQ6z10YMV9R-ddxp38xcYc-AUDk1FlxUz_eqsqfVCfqU371mQuHqYU8VY_iOZ0" },
-        { id: 3, title: "Neuro-Linguistics in AI", author: "Prof. Elena Miras", genre: "Cognitive Science", price: 45, isbn: "978-3-16-148412-4", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBdamoqyXTQbWK8ZLwW7iS3xNLpwp7bjKjqA-Le7AnSbMoZKS1Ad7Et3cKCJI_WPTQsl556dMVbS5zk51Xj4tPRbpPUZXobtcKv2tb3YOgyjXHoH6uSEG6eJ7HH5-wbrCZb57oxLMY1IHtkrurgtz6JtTtDMobtUlgI1HfZqA6d-ok72amncC4Xh40nsm5II3d-2CaYnLCoVmx82yYAuLykKElhJmttpe-6BXwR7bwQ777yUqrOrPZerkxkR-jLEP12h2F-cTwvzSk" },
-        { id: 4, title: "The Great Academic Rebound", author: "Collection of 2024 Journals", genre: "Anthology", price: 210, isbn: "978-3-16-148413-1", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAeml7Wbbmms3fWbpcGiwpXyDRpM9MRdKXeEKB767fRBtTGOxtxyQebtQqxkaTv57l34xc8EE1LH8BBna3bavIAtePrE7N26W_a2W-5_jYZvGvtOuhoJCQT4kt9TwKpJChsRA6OBmpCzsMwFFLc5eMvj-fXUXHXZHEI_VWZ6pgDhxab8O2PDww9YLx35WhKfEDq8VykZB49ZhqNRdIVoVk3NZ2lMEc7U1CM3JBP88ONTw3KTh8rR-YIBk0r5mB6VRgvvnDbF6W5N9I" },
-        { id: 5, title: "Genetic Legality & Coinage", author: "Marcus Vane", genre: "Bio-Engineering", price: 65, isbn: "978-3-16-148414-8", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDbNJS3KXTQ7g_1jc8BBxQnN1qwfRhRYG7TKMdHcCvLm9Dhh86TTVGQzGE2nHmdBsuYvBw8K8cpevXkxHdvdpHaFb_hE0sl_griUjR5Jdyi-bzS6SpVibHtwHqGq7Q0Li7cVER1iWp6sHHBI0khfk-BxKlJi6Ru9t1ZP96HA0vhGZotsh2kT6zHYly4iOiGAQV3NLdrMu5vX4APrn56V_Fv5Djy9Ogm3ig2hBToVxEuAhnpMB2DhFoTOdm5hpEAudpctciczJO719E" },
-        { id: 6, title: "The Digital Agora", author: "Sarah Chen, PhD", genre: "Social Sciences", price: 92, isbn: "978-3-16-148415-5", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuCEPHR34ooc9BZUvb9xs86e9FmvUJPofYElbG2dt9YdnLF5471OzxePktvLKsm-RcBTswmrXI7mHWVlupLjl6Q5CZx4Ox5pcBDcqzh8dWdpFpD0x2mYXnA_O44Jh_BaCm62M5_8chHYUIOeUELQHQGlBJdhufb7WDLzoi9k1F_RvAVEKH_9DVkNNobOHwkfNiZ0OZISLAyOtVEzfweZGUv6I-eNxyaoippdifNRCQIo-Shn57nXR3Km_5e8DATc0ZiRwxCimDlm5Wg" },
-        { id: 7, title: "Advanced Algorithms", author: "Prof. Helena Vance", genre: "Computer Science", price: 125, isbn: "978-3-16-148416-2", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAe9XdXwlFt50sLhaxWXr16Qwl6F6RiOR-nIZiS48teBKTPE33esT5xkZOHJbqNWd-eJ-inMsQjKs8qFUDKM4wj-pxymGZoWTv-PF37a8rb0yZghlvu3x0JQRAof1dEpW_qwaHa1N1epLlF28hPrOJnkkJpALv9pyLQlnMHBUoFfHMzFIyGZFUPF-OEuynBoX-gU788yoOVejJ_0LPti8sV5_-v65nvdH-LLIik7R33JrendMYg_LNQNIMHi0C5rYeHL_Ok6LIM0P4" },
-        { id: 8, title: "Urban Bio-Systems", author: "Dr. Marcus Thorne", genre: "Urban Planning", price: 82, isbn: "978-3-16-148417-9", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDnTwB4Z4gbug5Ff55p0YEUmrFqtaVA3hPjhnQftJ2XBCOjjXfPOf02xi6HSYjPHtJGq6ZygPrDYHKwpxE-GCeZrLgWRCH3jwUuAguu5EpLq8aXs-OVkIQ2axIKIlcvvfvwAot9Z-5nN-TTUe5A988kHKVseCVyGtHPUZVNd6xEEmu8HVGQiyeAztqHiYZ4ENWMUAzX35F10aZnKvi-6i_Xry3FDewmdHBvpqhJ6Mln7zz5VUxBA3iX_cU75ysDIcMxL94OuSnx6bM" },
-        { id: 9, title: "AI & Human Ethics", author: "Sarah Jenkins, PhD", genre: "Ethics", price: 150, isbn: "978-3-16-148418-6", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuDimv-UuliY_3CbM8etK-g9re7Cz15gm3mDenjeHEkN9JlLu1dbLuZaxdpMOx1roX58RV5KP5qoHXrzHnTfG3XP_ubfD6NZQAfP3oyXCNP74WYScszCbXhdg2cWvDa3VU4qewM-JSpHc0pTOjPa9Cs4mZpVR60bGkuaw_ICo1WndotbVUQJwfPbg89wm4heafP-lVjzPkdmzfzO-lT-IgwVbqM9rE6bwDV03dPBvyrRKptNM751mdneQuQRKLfhZzcI-XAT1H2WQjo" },
-        { id: 10, title: "Genomic Structures", author: "The Research Institute", genre: "Genetics", price: 224, isbn: "978-3-16-148419-3", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuAR8mDkF16v9T3fR6kymHtdwiPN-J8t35m0iPus08i__vHrUNqIYfZBrS2zuNMBi6xx_Z3L2JW7DIeb9fUnc4cISy9N7xINh1vFAqIkJ0wAhC0fCO1SUqQSTOi5E12byAUv6oYFSVwrgnlCDaZOeB1QfB6Ly6wTYXtNXt9WL-prtFGJBB0bjtXNmElHawrfwEXxroS9AhU7ygqygFu8tAshHzgz9WN2QatA9jR2-7thnGmAUJ2LdItJ8-K-HGY0iG2-c9EViAfEKF0" },
-        { id: 11, title: "Blockchain Law", author: "Prof. Michael Roberts", genre: "Law", price: 95, isbn: "978-3-16-148420-9", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBjHlWv2aKEtgMZpsUvxws9kj7JX-xYJZI0Qcc7-E2C_uSQgzpV4CNfhNdrq30-macExOB8djV1N3b5fgcWnAlDXb7Tx7dcvFTWiNgZvKOEx3awRe1ASXUysDZcFHaY0KLglpOO2aqp1Ra0nNrgvFxTJTdhKOc-JqQY8ByMdVZmuOvTQAHiENVZHxx77h03oErGTOwGV-rp8ElKmSDWiejUlJ7cXKcQ1tDTsx69xzO6LS-y31cJQc4ZBhJt4yWm7XjD5fFXK5N_A50" },
-        { id: 12, title: "Neurobiology Fundamentals", author: "Dr. Emma Watson", genre: "Biology", price: 175, isbn: "978-3-16-148421-6", image: "https://lh3.googleusercontent.com/aida-public/AB6AXuBz_GKGi4FkiIfTGjVyoOvDievwkcrO9Lg2UAbY8_K_bJBaRoY3KWN9UqQAOqDYHc1q0Cr1t4CyeFzua5W2mw1FPPVJ-ayM5mtETaFpjqjww81aBoldUEaAwv4cmXhPj-tjreooBdJ_sCnQyEpNeYtkgxnrELGdDmUT0pt6QYz-1AVRrHyrYXDd_huUVawzAlMRstXAJSCLGJeghC2mxQ0cGb6U4Pa-nrsk4gqMZcuNn95LhE455ZzF7XhAMp0AjWcrbobvGUyUxyc" },];
+        const books = JSON.parse(document.getElementById('books-data').textContent) || [];
 
         // ================= SEARCH (startsWith qo‘shildi) =================
         function searchBooks(query) {
@@ -485,7 +302,7 @@
 
             container.innerHTML = results.map(book => `
         <div class="p-4 border-b hover:bg-purple-50 flex items-center gap-4 cursor-pointer"
-             onclick="alert('${book.title}')">
+             onclick="openBookDetail(${book.id})">
             <div class="w-16 h-20 bg-slate-200 rounded overflow-hidden">
                 <img src="${book.image}" class="w-full h-full object-cover">
             </div>
@@ -494,9 +311,7 @@
                 <p class="text-sm text-purple-600">${book.author}</p>
                 <p class="text-xs text-slate-500">${book.genre}</p>
             </div>
-            <div class="text-right">
-                <span class="font-bold text-yellow-600">${book.price} BKC</span>
-            </div>
+            <span class="material-symbols-outlined text-purple-300 text-sm">arrow_forward</span>
         </div>
     `).join("");
 
@@ -519,8 +334,147 @@
             });
         }
 
+        function openBookDetail(bookId) {
+            const book = books.find(b => b.id === bookId);
+            if (!book) return;
+            localStorage.setItem('selectedBook', JSON.stringify(book));
+            window.location.href = "{% url 'blog:bookDetail' %}";
+        }
+
+        // ================= CATALOG STATE =================
+        let currentView = 'grid';
+        let currentPage = 1;
+        let activeGenres = new Set();
+        const PER_PAGE = 6;
+
+        function filteredBooks() {
+            if (activeGenres.size === 0) return books;
+            return books.filter(b => activeGenres.has(b.genre));
+        }
+
+        function totalPages() {
+            return Math.max(1, Math.ceil(filteredBooks().length / PER_PAGE));
+        }
+
+        // ================= RENDER CARDS =================
+        function renderCatalog() {
+            const grid = document.getElementById('catalog-grid');
+            const paged = filteredBooks().slice((currentPage - 1) * PER_PAGE, currentPage * PER_PAGE);
+
+            if (currentView === 'grid') {
+                grid.className = 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-8';
+                grid.innerHTML = paged.map(book => `
+                    <div onclick="openBookDetail(${book.id})"
+                        class="group relative flex flex-col bg-surface-container-lowest rounded-lg overflow-hidden transition-all duration-300 hover:-translate-y-2 cursor-pointer shadow-sm hover:shadow-xl">
+                        <div class="aspect-[3/4] overflow-hidden relative">
+                            <img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500" src="${book.image}" alt="${book.title}"/>
+                            <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+                                <span class="text-white text-xs font-bold bg-white/20 backdrop-blur px-3 py-1 rounded-full">View Details →</span>
+                            </div>
+                        </div>
+                        <div class="p-6 flex flex-col flex-1">
+                            <span class="text-[10px] uppercase tracking-widest font-bold text-outline-variant mb-2">${book.genre}</span>
+                            <h3 class="text-lg font-bold leading-tight text-primary mb-1 group-hover:text-primary-container transition-colors">${book.title}</h3>
+                            <p class="text-sm text-on-surface-variant">${book.author}</p>
+                        </div>
+                    </div>
+                `).join('');
+            } else {
+                grid.className = 'flex flex-col gap-4';
+                grid.innerHTML = paged.map(book => `
+                    <div onclick="openBookDetail(${book.id})"
+                        class="group flex items-center gap-6 bg-surface-container-lowest rounded-xl p-4 cursor-pointer hover:shadow-md transition-all hover:-translate-x-1">
+                        <img class="w-20 h-28 object-cover rounded-lg shrink-0 grayscale group-hover:grayscale-0 transition-all duration-300" src="${book.image}" alt="${book.title}"/>
+                        <div class="flex-1 min-w-0">
+                            <span class="text-[10px] uppercase tracking-widest font-bold text-outline-variant">${book.genre}</span>
+                            <h3 class="text-lg font-bold text-primary mt-0.5 group-hover:text-primary-container transition-colors">${book.title}</h3>
+                            <p class="text-sm text-on-surface-variant">${book.author}</p>
+                        </div>
+                        <span class="material-symbols-outlined text-outline group-hover:text-primary transition-colors shrink-0">arrow_forward</span>
+                    </div>
+                `).join('');
+            }
+
+            renderPagination();
+        }
+
+        // ================= PAGINATION =================
+        function renderPagination() {
+            const total = totalPages();
+            const nums = document.getElementById('page-numbers');
+            nums.innerHTML = '';
+            for (let i = 1; i <= total; i++) {
+                const btn = document.createElement('button');
+                btn.textContent = i;
+                btn.className = i === currentPage
+                    ? 'w-12 h-12 rounded-full bg-primary text-white font-bold'
+                    : 'w-12 h-12 rounded-full text-on-surface hover:bg-surface-container font-medium transition-colors';
+                btn.onclick = () => { currentPage = i; renderCatalog(); };
+                nums.appendChild(btn);
+            }
+            document.getElementById('btn-prev').disabled = currentPage === 1;
+            document.getElementById('btn-next').disabled = currentPage === total;
+        }
+
+        function changePage(dir) {
+            const total = totalPages();
+            currentPage = Math.max(1, Math.min(total, currentPage + dir));
+            renderCatalog();
+        }
+
+        // ================= VIEW TOGGLE =================
+        function setView(view) {
+            currentView = view;
+            document.getElementById('btn-grid').className = view === 'grid'
+                ? 'px-6 py-2 bg-primary text-white rounded-full text-sm font-bold transition-all'
+                : 'px-6 py-2 text-outline hover:text-primary rounded-full text-sm font-medium transition-colors';
+            document.getElementById('btn-list').className = view === 'list'
+                ? 'px-6 py-2 bg-primary text-white rounded-full text-sm font-bold transition-all'
+                : 'px-6 py-2 text-outline hover:text-primary rounded-full text-sm font-medium transition-colors';
+            currentPage = 1;
+            renderCatalog();
+        }
+
+        // ================= GENRE FILTER =================
+        function buildGenreFilters() {
+            const genres = [...new Set(books.map(b => b.genre))].sort();
+            const container = document.getElementById('genre-filters');
+            container.innerHTML = genres.map(g => `
+                <label class="flex items-center gap-3 cursor-pointer group">
+                    <input type="checkbox" class="rounded border-outline-variant text-primary focus:ring-primary genre-cb" value="${g}" onchange="onGenreChange()"/>
+                    <span class="text-sm text-on-surface-variant group-hover:text-primary transition-colors">${g}</span>
+                </label>
+            `).join('');
+        }
+
+        function onGenreChange() {
+            activeGenres = new Set([...document.querySelectorAll('.genre-cb:checked')].map(cb => cb.value));
+            currentPage = 1;
+            renderCatalog();
+        }
+
+        // ================= CLICK OUTSIDE SEARCH =================
+        document.addEventListener('click', function(e) {
+            const sr = document.getElementById('search-results');
+            const si = document.getElementById('search-input');
+            if (sr && si && !sr.contains(e.target) && !si.contains(e.target)) {
+                sr.classList.add('hidden');
+            }
+        });
+
         document.addEventListener("DOMContentLoaded", () => {
             initSearch("search-input", "search-results");
+            buildGenreFilters();
+            renderCatalog();
+
+            // Profile avatar from localStorage
+            const saved = localStorage.getItem('profileImage');
+            if (saved) {
+                const img = document.getElementById('cat-avatar-img');
+                const letter = document.getElementById('cat-avatar-letter');
+                if (img) { img.src = saved; img.classList.remove('hidden'); }
+                if (letter) letter.classList.add('hidden');
+            }
         });
     </script>
 </body>

@@ -1,16 +1,20 @@
-window.books = JSON.parse(localStorage.getItem("mybooks")) || [];
+const STORAGE_KEY = "myBooks";
+
+window.books = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 
 window.saveBooks = function () {
-  localStorage.setItem("mybooks", JSON.stringify(window.books));
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(window.books));
 };
 
 window.buyBook = function (book) {
-  window.books.push(book);
-  window.saveBooks();
+  if (!window.books.find(b => b.id === book.id)) {
+    window.books.push(book);
+    window.saveBooks();
+  }
 };
 
 window.getBooks = function () {
-  return window.books;
+  return JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
 };
 
 window.removeBook = function (index) {

@@ -20,7 +20,8 @@ window.addEventListener("load", function () {
 
         const data = {
             username: document.getElementById("username").value,
-            password: document.getElementById("password").value
+            password: document.getElementById("password").value,
+            remember: document.getElementById("remember").checked
         };
 
         try {
@@ -33,8 +34,7 @@ window.addEventListener("load", function () {
             const result = await response.json();
 
             if (result.success) {
-                alert("✅ Login muvaffaqiyatli: " + result.username);
-                window.location.href = "/main/";
+                window.location.href = "/studentDashboard/";
             } else {
                 alert("❌ Xatolik: " + (result.error || "Noto'g'ri ma'lumot"));
             }

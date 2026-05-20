@@ -1,93 +1,194 @@
-{%load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>BookCoin | My Books</title>
+  <link rel="icon" href="{% static 'images/bookLogotip.jpg' %}"/>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="icon" href="{% static 'images/bookLogotip.jpg'%}">
-
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    h1,h2,h3,h4 { font-family: 'Space Grotesk', sans-serif; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    .card-anim { animation: fadeUp 0.35s ease both; }
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .card-anim:nth-child(1)  { animation-delay: 0.04s; }
+    .card-anim:nth-child(2)  { animation-delay: 0.08s; }
+    .card-anim:nth-child(3)  { animation-delay: 0.12s; }
+    .card-anim:nth-child(4)  { animation-delay: 0.16s; }
+    .card-anim:nth-child(5)  { animation-delay: 0.20s; }
+    .card-anim:nth-child(6)  { animation-delay: 0.24s; }
+    .card-anim:nth-child(7)  { animation-delay: 0.28s; }
+    .card-anim:nth-child(8)  { animation-delay: 0.32s; }
+  </style>
+  <link rel="stylesheet" href="{% static 'css/dark.css' %}">
+  <script>if(localStorage.getItem('darkMode')==='true')document.documentElement.classList.add('dark');</script>
 </head>
 
-<body class="bg-gray-950 text-white">
+<body class="bg-[#f3f4f8] min-h-screen">
 
-  <!-- HEADER -->
-  <div class="max-w-7xl mx-auto p-6 flex justify-between items-center">
-    <h1 class="text-2xl font-semibold">📖 My Books</h1>
-
-    <span style="display: flex; gap: 20px;">
-      <a href="{%url 'blog:studentDashboard'%}" class="bg-indigo-600 px-4 py-2 rounded-lg hover:bg-indigo-700">
-        Dashboard
+  <!-- NAV -->
+  <nav class="bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between sticky top-0 z-40 shadow-sm">
+    <div class="flex items-center gap-3">
+      <a href="{% url 'blog:studentDashboard' %}"
+         class="w-9 h-9 flex items-center justify-center rounded-full hover:bg-gray-100 transition">
+        <span class="material-symbols-outlined text-gray-500 text-xl">arrow_back</span>
       </a>
-
-      <a href="{%url 'blog:marketPlace'%}" class="bg-indigo-600 px-4 py-2 rounded-lg hover:bg-indigo-700">
-        MarketPlace
+      <div>
+        <h1 class="text-lg font-bold text-[#2e0052]">My Books</h1>
+        <p class="text-xs text-gray-400" id="book-count">0 books saved</p>
+      </div>
+    </div>
+    <div class="flex items-center gap-3">
+      <a href="{% url 'blog:marketPlace' %}"
+         class="hidden sm:flex items-center gap-2 text-sm bg-[#2e0052] text-white px-4 py-2 rounded-full font-semibold hover:bg-[#4b0082] transition">
+        <span class="material-symbols-outlined text-base">store</span>
+        Marketplace
       </a>
-
-      <a href="{%url 'blog:catalog'%}" class="bg-indigo-600 px-4 py-2 rounded-lg hover:bg-indigo-700">
+      <a href="{% url 'blog:catalog' %}"
+         class="hidden sm:flex items-center gap-2 text-sm border border-[#2e0052] text-[#2e0052] px-4 py-2 rounded-full font-semibold hover:bg-purple-50 transition">
+        <span class="material-symbols-outlined text-base">menu_book</span>
         Catalog
       </a>
-    </span>
-  </div>
+      <a href="{% url 'blog:settings_page' %}"
+         class="w-9 h-9 rounded-full bg-[#2e0052] flex items-center justify-center text-white text-sm font-bold uppercase overflow-hidden flex-shrink-0">
+        <img id="mybook-avatar-img" src="" alt="" class="w-full h-full object-cover hidden"/>
+        <span id="mybook-avatar-letter">{% if user %}{{ user.username|first }}{% else %}?{% endif %}</span>
+      </a>
+    </div>
+  </nav>
 
-  <!-- GRID -->
-  <div class="max-w-7xl mx-auto px-6 pb-10">
+  <div class="max-w-6xl mx-auto px-4 py-8">
 
-    <div id="list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <!-- STATS -->
+    <div id="stats-row" class="hidden grid grid-cols-2 sm:grid-cols-3 gap-4 mb-8">
+      <div class="bg-gradient-to-br from-[#2e0052] to-[#6d28d9] rounded-2xl p-5 text-white shadow-lg">
+        <p class="text-white/60 text-xs font-medium mb-1">Total Books</p>
+        <p class="text-3xl font-black" id="stat-count">0</p>
+        <p class="text-white/50 text-xs mt-1">In your library</p>
+      </div>
+      <div class="bg-white rounded-2xl p-5 shadow-sm">
+        <p class="text-gray-400 text-xs font-medium mb-1">Genres</p>
+        <p class="text-3xl font-black text-[#2e0052]" id="stat-genres">0</p>
+        <p class="text-gray-400 text-xs mt-1">Categories</p>
+      </div>
+      <div class="bg-white rounded-2xl p-5 shadow-sm col-span-2 sm:col-span-1">
+        <p class="text-gray-400 text-xs font-medium mb-1">Latest Added</p>
+        <p class="text-sm font-bold text-[#2e0052] line-clamp-2" id="stat-latest">—</p>
+      </div>
+    </div>
+
+    <!-- GRID -->
+    <div id="list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6"></div>
+
+    <!-- EMPTY STATE -->
+    <div id="empty-state" class="hidden flex-col items-center justify-center py-32 text-center">
+      <div class="w-28 h-28 bg-purple-100 rounded-full flex items-center justify-center mb-6 shadow-inner">
+        <span class="material-symbols-outlined text-6xl text-purple-300">auto_stories</span>
+      </div>
+      <h2 class="text-2xl font-bold text-gray-800 mb-2">No books yet</h2>
+      <p class="text-gray-400 text-sm max-w-xs mb-8">
+        Bron qilgan kitoblaringiz shu yerda ko'rinadi. Marketplace dan kitob tanlang!
+      </p>
+      <a href="{% url 'blog:marketPlace' %}"
+         class="px-8 py-3 bg-[#2e0052] text-white rounded-full font-bold text-sm hover:bg-[#4b0082] transition shadow-lg">
+        Browse Marketplace
+      </a>
     </div>
 
   </div>
 
-  <script src="{%static 'js/store.js'%}?v=2"></script>
+  <script src="{% static 'js/store.js' %}?v=4"></script>
   <script>
     function render() {
-      const list = document.getElementById("list");
       const data = getBooks();
+      const list = document.getElementById('list');
+      const empty = document.getElementById('empty-state');
+      const statsRow = document.getElementById('stats-row');
+      const countEl = document.getElementById('book-count');
 
-      list.innerHTML = "";
+      list.innerHTML = '';
 
       if (data.length === 0) {
-        list.innerHTML = `<p class="text-gray-400">No books yet 📭</p>`;
+        empty.classList.remove('hidden');
+        empty.classList.add('flex');
+        statsRow.classList.add('hidden');
+        countEl.textContent = '0 books saved';
         return;
       }
 
+      empty.classList.add('hidden');
+      empty.classList.remove('flex');
+      statsRow.classList.remove('hidden');
+      statsRow.classList.add('grid');
+      countEl.textContent = `${data.length} book${data.length !== 1 ? 's' : ''} saved`;
+
+      // stats
+      const genres = new Set(data.map(b => b.genre).filter(Boolean));
+      document.getElementById('stat-count').textContent = data.length;
+      document.getElementById('stat-genres').textContent = genres.size;
+      document.getElementById('stat-latest').textContent = data[data.length - 1]?.title || '—';
+
       data.forEach((book, index) => {
-        const div = document.createElement("div");
+        const card = document.createElement('div');
+        card.className = 'card-anim bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 flex flex-col group';
 
-        div.className = `
-        bg-gray-900 rounded-2xl overflow-hidden shadow hover:scale-105 transition
-      `;
+        const img = book.img || book.image || '';
+        const title = book.title || 'Untitled';
+        const author = book.author || '—';
+        const genre = book.genre || 'General';
 
-        div.innerHTML = `
-        <img src="${book.img}" class="h-40 w-full object-cover">
+        card.innerHTML = `
+          <div class="relative h-48 bg-purple-100 overflow-hidden">
+            ${img
+              ? `<img src="${img}" alt="${title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"/>`
+              : `<div class="w-full h-full flex items-center justify-center">
+                   <span class="material-symbols-outlined text-5xl text-purple-300">menu_book</span>
+                 </div>`
+            }
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+            <span class="absolute top-3 right-3 text-[10px] font-bold px-2 py-1 bg-purple-600/90 text-white rounded-full backdrop-blur-sm">
+              ${genre}
+            </span>
+          </div>
+          <div class="p-4 flex flex-col flex-1">
+            <h3 class="font-bold text-[#2e0052] text-sm leading-snug line-clamp-2 mb-1">${title}</h3>
+            <p class="text-xs text-gray-400 mb-4 flex-1">${author}</p>
+            <button
+              class="remove-btn w-full flex items-center justify-center gap-2 py-2 rounded-xl text-xs font-bold text-red-500 border border-red-100 hover:bg-red-50 transition-colors"
+              data-index="${index}">
+              <span class="material-symbols-outlined text-sm">delete</span>
+              Remove
+            </button>
+          </div>
+        `;
 
-        <div class="p-4">
-          <h2 class="font-semibold">${book.title}</h2>
-          <p class="text-gray-400 text-sm">${book.author}</p>
-
-          <button class="mt-3 w-full bg-red-600 py-1 rounded hover:bg-red-700">
-            Remove ❌
-          </button>
-        </div>
-      `;
-
-        // remove event
-        div.querySelector("button").addEventListener("click", () => {
+        card.querySelector('.remove-btn').addEventListener('click', () => {
           removeBook(index);
           render();
         });
 
-        list.appendChild(div);
+        list.appendChild(card);
       });
     }
 
     render();
+
+    // Profile avatar from localStorage
+    const savedImg = localStorage.getItem('profileImage');
+    if (savedImg) {
+      const img = document.getElementById('mybook-avatar-img');
+      const letter = document.getElementById('mybook-avatar-letter');
+      if (img) { img.src = savedImg; img.classList.remove('hidden'); }
+      if (letter) letter.classList.add('hidden');
+    }
   </script>
 
-
-
-
 </body>
-
 </html>
