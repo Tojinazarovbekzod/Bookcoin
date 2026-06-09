@@ -124,16 +124,22 @@ label {
   font-family: 'Poppins', sans-serif;
 }
 
-form #checked input {
+form #checked {
   position: relative;
+}
+
+form #checked input {
+  padding-right: 50px;
 }
 
 form #checked img {
   position: absolute;
-  width: 40px;
-  height: 40px;
-  margin-left: 140px;
-  margin-top: -40px;
+  width: 24px;
+  height: 24px;
+  right: 14px;
+  bottom: 10px;
+  cursor: pointer;
+  margin: 0;
 }
 
 .switch input {
@@ -180,6 +186,7 @@ input:checked+.slider::before {
 input[type="text"],
 input[type="password"] {
   width: 100%;
+  box-sizing: border-box;
   padding: 12px 14px;
   border-radius: 10px;
   border: none;

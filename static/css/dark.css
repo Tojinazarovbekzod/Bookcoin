@@ -106,6 +106,15 @@ html.dark textarea                   { background-color: #1e1e2c !important; col
 html.dark input::placeholder,
 html.dark textarea::placeholder      { color: #aaaacc !important; }
 
+/* ---- Login / Signup buttons — oq fonda qora matn ---- */
+html.dark button.btn,
+html.dark button.btn a,
+html.dark .btn,
+html.dark .btn a,
+html.dark .btn *                     { color: #111111 !important; }
+html.dark button.btn,
+html.dark .btn                       { background: #ffffff !important; }
+
 /* ---- Table rows ---- */
 html.dark .bg-surface-container-low.px-6 { background-color: #1a1a26 !important; }
 html.dark .hover\:bg-surface-container-highest:hover { background-color: #2a2a3a !important; }
